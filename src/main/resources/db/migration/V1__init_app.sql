@@ -12,8 +12,9 @@ alter table "carts"
     add constraint "cart_pk" primary key ("id");
 
 insert into "carts"
-values (9, current_timestamp, current_timestamp, 'NEW', 7),
-       (12, current_timestamp, current_timestamp, 'NEW', 8);
+values (1, current_timestamp, current_timestamp, 'NEW', 1),
+       (2, current_timestamp, current_timestamp, 'NEW', 2),
+       (3, current_timestamp, current_timestamp, 'NEW', 3);
 
 create table "categories"
 (
@@ -43,8 +44,9 @@ alter table "customers"
     add constraint "customer_pk" primary key ("id");
 
 insert into "customers"
-values (7, current_timestamp, current_timestamp, 'jason.bourne@mail.hello', TRUE, 'Jason', 'Bourne', '010203040506'),
-       (8, current_timestamp, current_timestamp, 'homer.simpson@mail.hello', TRUE, 'Homer', 'Simpson', '060504030201');
+values (1, current_timestamp, current_timestamp, 'jason.bourne@mail.hello', TRUE, 'Jason', 'Bourne', '010203040506'),
+       (2, current_timestamp, current_timestamp, 'homer.simpson@mail.hello', TRUE, 'Homer', 'Simpson', '060504030201'),
+       (3, current_timestamp, current_timestamp, 'peter.quinn@mail.hello', FALSE, 'Peter', 'Quinn', '070605040302');
 create table "order_items"
 (
     "id"                 bigint    not null,
@@ -58,8 +60,8 @@ alter table "order_items"
     add constraint "order_item_pk" primary key ("id");
 
 insert into "order_items"
-values (11, current_timestamp, current_timestamp, 1, 10, 2),
-       (14, current_timestamp, current_timestamp, 1, 13, 3);
+values (1, current_timestamp, current_timestamp, 1, 1, 1),
+       (2, current_timestamp, current_timestamp, 1, 2, 2);
 create table "orders"
 (
     "id"                 bigint         not null,
@@ -80,10 +82,10 @@ alter table "orders"
     add constraint "orders_pk" primary key ("id");
 
 insert into "orders"
-values (10, current_timestamp, current_timestamp, 'Rue Vaugirard', NULL, 'Paris', 'FR', '75015', NULL, 'CREATION',
-        999.00, 9, NULL),
-       (13, current_timestamp, current_timestamp, 'Rue Maupertuis', NULL, 'Le Mans', 'FR', '72100', NULL, 'CREATION',
-        759.00, 12, NULL);
+values (1, current_timestamp, current_timestamp, 'Rue Vaugirard', NULL, 'Paris', 'FR', '75015', NULL, 'CREATION',
+        999.00, 1, NULL),
+       (2, current_timestamp, current_timestamp, 'Rue Maupertuis', NULL, 'Le Mans', 'FR', '72100', NULL, 'CREATION',
+        759.00, 2, NULL);
 create table "payments"
 (
     "id"                 bigint       not null,
@@ -112,9 +114,9 @@ alter table "products"
     add constraint "product_pk" primary key ("id");
 
 insert into "products"
-values (2, current_timestamp, current_timestamp, 'The latest powerful iPhone from Apple', 'iPhone 11 Pro', 999.00, 0,
+values (1, current_timestamp, current_timestamp, 'The latest powerful iPhone from Apple', 'iPhone 11 Pro', 999.00, 0,
         'AVAILABLE', 1),
-       (3, current_timestamp, current_timestamp, 'The most powerful iPhone from Apple', 'iPhone XS', 759.00, 0,
+       (2, current_timestamp, current_timestamp, 'The most powerful iPhone from Apple', 'iPhone XS', 759.00, 0,
         'AVAILABLE', 1);
 create table "products_reviews"
 (
@@ -125,9 +127,9 @@ alter table "products_reviews"
     add constraint "products_reviews_pk" primary key ("product_id", "reviews_id");
 
 insert into "products_reviews"
-values (2, 4),
-       (2, 5),
-       (3, 6);
+values (1, 1),
+       (1, 2),
+       (2, 3);
 create table "reviews"
 (
     "id"                 bigint       not null,
@@ -141,10 +143,10 @@ alter table "reviews"
     add constraint "review_pk" primary key ("id");
 
 insert into "reviews"
-values (4, current_timestamp, current_timestamp, 'I like the product but I found that it''s not perfect', 4,
+values (1, current_timestamp, current_timestamp, 'I like the product but I found that it''s not perfect', 1,
         'Good but not perfect'),
-       (5, current_timestamp, current_timestamp, 'Wonderful product', 5, 'Excellent'),
-       (6, current_timestamp, current_timestamp, 'I like the product but not the price', 3, 'Good but very expensive');
+       (2, current_timestamp, current_timestamp, 'Wonderful product', 2, 'Excellent'),
+       (3, current_timestamp, current_timestamp, 'I like the product but not the price', 3, 'Good but very expensive');
 alter table "products_reviews"
     add constraint "products_reviews_uk" unique ("reviews_id");
 alter table "payments"
@@ -170,4 +172,4 @@ alter table "orders"
 alter table "products_reviews"
     add constraint "products_reviews_fk2" foreign key ("product_id") references "products" ("id");
 
-SELECT pg_catalog.setval('hibernate_sequence', 14, true);
+-- SELECT pg_catalog.setval('hibernate_sequence', 14, true);
