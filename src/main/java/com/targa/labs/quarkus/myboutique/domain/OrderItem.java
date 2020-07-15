@@ -1,5 +1,9 @@
 package com.targa.labs.quarkus.myboutique.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +15,9 @@ import java.util.Objects;
 /**
  * A OrderItem.
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "order_items")
 public class OrderItem extends AbstractEntity {
@@ -25,36 +32,9 @@ public class OrderItem extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Order order;
 
-    public OrderItem() {
-    }
-
     public OrderItem(@NotNull Long quantity, Product product, Order order) {
         this.quantity = quantity;
         this.product = product;
-        this.order = order;
-    }
-
-    public Long getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
         this.order = order;
     }
 

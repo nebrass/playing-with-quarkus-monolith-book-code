@@ -1,17 +1,21 @@
 package com.targa.labs.quarkus.myboutique.domain;
 
-import javax.json.bind.annotation.JsonbTransient;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * A Category.
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "categories")
 public class Category extends AbstractEntity {
@@ -24,41 +28,9 @@ public class Category extends AbstractEntity {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "category")
-    @JsonbTransient
-    private Set<Product> products;
-
-    public Category() {
-    }
-
-    public Category(@NotNull String name, @NotNull String description, Set<Product> products) {
+    public Category(@NotNull String name, @NotNull String description) {
         this.name = name;
         this.description = description;
-        this.products = products;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Set<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(Set<Product> products) {
-        this.products = products;
     }
 
     @Override
@@ -67,8 +39,7 @@ public class Category extends AbstractEntity {
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
         return Objects.equals(name, category.name) &&
-                Objects.equals(description, category.description) &&
-                Objects.equals(products, category.products);
+                Objects.equals(description, category.description);
     }
 
     @Override

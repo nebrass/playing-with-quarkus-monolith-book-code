@@ -1,6 +1,5 @@
 package com.targa.labs.quarkus.myboutique.web;
 
-import com.targa.labs.quarkus.myboutique.common.Web;
 import com.targa.labs.quarkus.myboutique.service.PaymentService;
 import com.targa.labs.quarkus.myboutique.web.dto.PaymentDto;
 
@@ -19,9 +18,8 @@ import java.util.List;
  * @author Nebrass Lamouchi
  */
 @ApplicationScoped
-@Path(Web.API + "/payments")
+@Path("/payments")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class PaymentResource {
 
     private final PaymentService paymentService;
@@ -42,6 +40,7 @@ public class PaymentResource {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     public PaymentDto create(PaymentDto orderItemDto) {
         return this.paymentService.create(orderItemDto);
     }
@@ -54,7 +53,7 @@ public class PaymentResource {
 
     @GET
     @Path("/price/{price}")
-    public Boolean findByRangeMax(@PathParam("price") double max) {
+    public List<PaymentDto> findPaymentsByAmountRangeMax(@PathParam("price") double max) {
         return this.paymentService.findByPriceRange(max);
     }
 }

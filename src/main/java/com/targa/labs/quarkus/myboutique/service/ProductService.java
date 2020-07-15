@@ -86,4 +86,18 @@ public class ProductService {
         log.debug("Request to delete Product : {}", id);
         this.productRepository.deleteById(id);
     }
+
+    public List<ProductDto> findByCategoryId(Long id) {
+        return this.productRepository.findByCategoryId(id).stream()
+                .map(ProductService::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    public Long countAll() {
+        return this.productRepository.count();
+    }
+
+    public Long countByCategoryId(Long id) {
+        return this.productRepository.countAllByCategoryId(id);
+    }
 }

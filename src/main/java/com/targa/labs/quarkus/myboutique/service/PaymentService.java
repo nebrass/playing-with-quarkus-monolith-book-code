@@ -2,6 +2,7 @@ package com.targa.labs.quarkus.myboutique.service;
 
 import com.targa.labs.quarkus.myboutique.domain.Order;
 import com.targa.labs.quarkus.myboutique.domain.Payment;
+import com.targa.labs.quarkus.myboutique.domain.enumeration.OrderStatus;
 import com.targa.labs.quarkus.myboutique.domain.enumeration.PaymentStatus;
 import com.targa.labs.quarkus.myboutique.repository.OrderRepository;
 import com.targa.labs.quarkus.myboutique.repository.PaymentRepository;
@@ -28,38 +29,42 @@ public class PaymentService {
         this.orderRepository = orderRepository;
     }
 
-    public static PaymentDto mapToDto(Payment payment) {
+    public static PaymentDto mapToDto(Payment payment, Long orderId) {
         if (payment != null) {
             return new PaymentDto(
                     payment.getId(),
                     payment.getPaypalPaymentId(),
                     payment.getStatus().name(),
-                    payment.getOrder().getId()
+                    orderId
             );
         }
         return null;
     }
 
-    public Boolean findByPriceRange(double max) {
-        return this.paymentRepository
-                .existsPaymentByOrderPriceBetween(BigDecimal.ZERO, BigDecimal.valueOf(max));
-
+    public List<PaymentDto> findByPriceRange(double max) {
+        return this.orderRepository
+                .findAllByPriceBetween(BigDecimal.ZERO, BigDecimal.valueOf(max))
+                .stream()
+                .map(order -> mapToDto(order.getPayment(), order.getId()))
+                .collect(Collectors.toList());
     }
 
     public List<PaymentDto> findAll() {
         log.debug("Request to get all Payments");
         return this.paymentRepository.findAll()
                 .stream()
-                .map(PaymentService::mapToDto)
+                .map(payment -> findById(payment.getId()))
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public PaymentDto findById(Long id) {
         log.debug("Request to get Payment : {}", id);
+        Order order = this.orderRepository.findByPaymentId(id)
+                .orElseThrow(() -> new IllegalStateException("No Order exists for the Payment ID " + id));
+
         return this.paymentRepository
                 .findById(id)
-                .map(PaymentService::mapToDto)
+                .map(payment -> mapToDto(payment, order.getId()))
                 .orElse(null);
     }
 
@@ -71,13 +76,16 @@ public class PaymentService {
                         .findById(paymentDto.getOrderId())
                         .orElseThrow(() -> new IllegalStateException("The Order does not exist!"));
 
-        return mapToDto(this.paymentRepository.save(
-                new Payment(
-                        paymentDto.getPaypalPaymentId(),
-                        PaymentStatus.valueOf(paymentDto.getStatus()),
-                        order
-                )
+        order.setStatus(OrderStatus.PAID);
+
+        Payment payment = this.paymentRepository.saveAndFlush(new Payment(
+                paymentDto.getPaypalPaymentId(),
+                PaymentStatus.valueOf(paymentDto.getStatus())
         ));
+
+        this.orderRepository.saveAndFlush(order);
+
+        return mapToDto(payment, order.getId());
     }
 
     public void delete(Long id) {

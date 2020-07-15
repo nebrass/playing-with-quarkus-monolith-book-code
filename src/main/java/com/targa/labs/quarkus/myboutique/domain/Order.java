@@ -1,6 +1,9 @@
 package com.targa.labs.quarkus.myboutique.domain;
 
 import com.targa.labs.quarkus.myboutique.domain.enumeration.OrderStatus;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
@@ -23,6 +26,9 @@ import java.util.Set;
 /**
  * A Orders.
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "orders")
 public class Order extends AbstractEntity {
@@ -39,7 +45,7 @@ public class Order extends AbstractEntity {
     @Column(name = "shipped")
     private ZonedDateTime shipped;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(unique = true)
     private Payment payment;
 
@@ -53,9 +59,6 @@ public class Order extends AbstractEntity {
     @OneToOne(cascade = CascadeType.REMOVE)
     private Cart cart;
 
-    public Order() {
-    }
-
     public Order(@NotNull BigDecimal price, @NotNull OrderStatus status,
                  ZonedDateTime shipped, Payment payment, Address shipmentAddress,
                  Set<OrderItem> orderItems, Cart cart) {
@@ -65,62 +68,6 @@ public class Order extends AbstractEntity {
         this.payment = payment;
         this.shipmentAddress = shipmentAddress;
         this.orderItems = orderItems;
-        this.cart = cart;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    public ZonedDateTime getShipped() {
-        return shipped;
-    }
-
-    public void setShipped(ZonedDateTime shipped) {
-        this.shipped = shipped;
-    }
-
-    public Payment getPayment() {
-        return payment;
-    }
-
-    public void setPayment(Payment payment) {
-        this.payment = payment;
-    }
-
-    public Address getShipmentAddress() {
-        return shipmentAddress;
-    }
-
-    public void setShipmentAddress(Address shipmentAddress) {
-        this.shipmentAddress = shipmentAddress;
-    }
-
-    public Set<OrderItem> getOrderItems() {
-        return orderItems;
-    }
-
-    public void setOrderItems(Set<OrderItem> orderItems) {
-        this.orderItems = orderItems;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
         this.cart = cart;
     }
 

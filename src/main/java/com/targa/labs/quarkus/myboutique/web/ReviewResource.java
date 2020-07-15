@@ -1,6 +1,5 @@
 package com.targa.labs.quarkus.myboutique.web;
 
-import com.targa.labs.quarkus.myboutique.common.Web;
 import com.targa.labs.quarkus.myboutique.service.ReviewService;
 import com.targa.labs.quarkus.myboutique.web.dto.ReviewDto;
 
@@ -19,9 +18,8 @@ import java.util.List;
  * @author Nebrass Lamouchi
  */
 @ApplicationScoped
-@Path(Web.API + "/reviews")
+@Path("/reviews")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class ReviewResource {
 
     private final ReviewService reviewService;
@@ -31,8 +29,9 @@ public class ReviewResource {
     }
 
     @GET
-    public List<ReviewDto> findAll() {
-        return this.reviewService.findAll();
+    @Path("/product/{id}")
+    public List<ReviewDto> findAllByProduct(@PathParam("id") Long id) {
+        return this.reviewService.findReviewsByProductId(id);
     }
 
     @GET
@@ -42,8 +41,10 @@ public class ReviewResource {
     }
 
     @POST
-    public ReviewDto create(ReviewDto reviewDto) {
-        return this.reviewService.createDto(reviewDto);
+    @Path("/product/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ReviewDto create(ReviewDto reviewDto, @PathParam("id") Long id) {
+        return this.reviewService.create(reviewDto, id);
     }
 
     @DELETE

@@ -1,6 +1,5 @@
 package com.targa.labs.quarkus.myboutique.web;
 
-import com.targa.labs.quarkus.myboutique.common.Web;
 import com.targa.labs.quarkus.myboutique.service.OrderItemService;
 import com.targa.labs.quarkus.myboutique.web.dto.OrderItemDto;
 
@@ -19,9 +18,8 @@ import java.util.List;
  * @author Nebrass Lamouchi
  */
 @ApplicationScoped
-@Path(Web.API + "/order-items")
+@Path("/order-items")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class OrderItemResource {
 
     private final OrderItemService itemService;
@@ -31,8 +29,9 @@ public class OrderItemResource {
     }
 
     @GET
-    public List<OrderItemDto> findAll() {
-        return this.itemService.findAll();
+    @Path("/order/{id}")
+    public List<OrderItemDto> findByOrderId(@PathParam("id") Long id) {
+        return this.itemService.findByOrderId(id);
     }
 
     @GET
@@ -42,6 +41,7 @@ public class OrderItemResource {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     public OrderItemDto create(OrderItemDto orderItemDto) {
         return this.itemService.create(orderItemDto);
     }

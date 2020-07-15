@@ -1,6 +1,5 @@
 package com.targa.labs.quarkus.myboutique.web;
 
-import com.targa.labs.quarkus.myboutique.common.Web;
 import com.targa.labs.quarkus.myboutique.service.CustomerService;
 import com.targa.labs.quarkus.myboutique.web.dto.CustomerDto;
 
@@ -19,7 +18,7 @@ import java.util.List;
  * @author Nebrass Lamouchi
  */
 @ApplicationScoped
-@Path(Web.API + "/customers")
+@Path("/customers")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CustomerResource {

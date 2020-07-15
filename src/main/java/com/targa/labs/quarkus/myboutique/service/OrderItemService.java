@@ -45,14 +45,6 @@ public class OrderItemService {
         return null;
     }
 
-    public List<OrderItemDto> findAll() {
-        log.debug("Request to get all OrderItems");
-        return this.orderItemRepository.findAll()
-                .stream()
-                .map(OrderItemService::mapToDto)
-                .collect(Collectors.toList());
-    }
-
     @Transactional
     public OrderItemDto findById(Long id) {
         log.debug("Request to get OrderItem : {}", id);
@@ -89,6 +81,27 @@ public class OrderItemService {
 
     public void delete(Long id) {
         log.debug("Request to delete OrderItem : {}", id);
+
+        OrderItem orderItem = this.orderItemRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("The OrderItem does not exist!"));
+
+        Order order = orderItem.getOrder();
+        order.setPrice(
+                order.getPrice().subtract(orderItem.getProduct().getPrice())
+        );
+
         this.orderItemRepository.deleteById(id);
+
+        order.getOrderItems().remove(orderItem);
+
+        this.orderRepository.save(order);
+    }
+
+    public List<OrderItemDto> findByOrderId(Long id) {
+        log.debug("Request to get all OrderItems of OrderId {}", id);
+        return this.orderItemRepository.findAllByOrderId(id)
+                .stream()
+                .map(OrderItemService::mapToDto)
+                .collect(Collectors.toList());
     }
 }

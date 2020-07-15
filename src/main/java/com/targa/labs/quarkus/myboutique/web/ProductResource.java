@@ -1,6 +1,5 @@
 package com.targa.labs.quarkus.myboutique.web;
 
-import com.targa.labs.quarkus.myboutique.common.Web;
 import com.targa.labs.quarkus.myboutique.service.ProductService;
 import com.targa.labs.quarkus.myboutique.web.dto.ProductDto;
 
@@ -19,9 +18,8 @@ import java.util.List;
  * @author Nebrass Lamouchi
  */
 @ApplicationScoped
-@Path(Web.API + "/products")
+@Path("/products")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class ProductResource {
 
     private final ProductService productService;
@@ -36,12 +34,19 @@ public class ProductResource {
     }
 
     @GET
+    @Path("/count")
+    public Long countAllProducts() {
+        return this.productService.countAll();
+    }
+
+    @GET
     @Path("/{id}")
     public ProductDto findById(@PathParam("id") Long id) {
         return this.productService.findById(id);
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     public ProductDto create(ProductDto productDto) {
         return this.productService.create(productDto);
     }
@@ -50,5 +55,17 @@ public class ProductResource {
     @Path("/{id}")
     public void delete(@PathParam("id") Long id) {
         this.productService.delete(id);
+    }
+
+    @GET
+    @Path("/category/{id}")
+    public List<ProductDto> findByCategoryId(@PathParam("id") Long id) {
+        return this.productService.findByCategoryId(id);
+    }
+
+    @GET
+    @Path("/count/category/{id}")
+    public Long countByCategoryId(@PathParam("id") Long id) {
+        return this.productService.countByCategoryId(id);
     }
 }

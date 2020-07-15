@@ -1,14 +1,19 @@
 package com.targa.labs.quarkus.myboutique.domain;
 
 import com.targa.labs.quarkus.myboutique.domain.enumeration.ProductStatus;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.json.bind.annotation.JsonbTransient;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -21,6 +26,9 @@ import java.util.Set;
 /**
  * A Product.
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "products")
 public class Product extends AbstractEntity {
@@ -45,16 +53,16 @@ public class Product extends AbstractEntity {
     @Column(name = "sales_counter")
     private Integer salesCounter;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinTable(name = "products_reviews",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "reviews_id"))
     @JsonbTransient
     private Set<Review> reviews = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    public Product() {
-    }
 
     public Product(@NotNull String name, @NotNull String description,
                    @NotNull BigDecimal price, @NotNull ProductStatus status) {
@@ -84,62 +92,6 @@ public class Product extends AbstractEntity {
         this.status = status;
         this.salesCounter = salesCounter;
         this.reviews = reviews;
-        this.category = category;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public ProductStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ProductStatus status) {
-        this.status = status;
-    }
-
-    public Integer getSalesCounter() {
-        return salesCounter;
-    }
-
-    public void setSalesCounter(Integer salesCounter) {
-        this.salesCounter = salesCounter;
-    }
-
-    public Set<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(Set<Review> reviews) {
-        this.reviews = reviews;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
         this.category = category;
     }
 

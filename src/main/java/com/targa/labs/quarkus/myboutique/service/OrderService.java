@@ -5,6 +5,7 @@ import com.targa.labs.quarkus.myboutique.domain.Cart;
 import com.targa.labs.quarkus.myboutique.domain.Order;
 import com.targa.labs.quarkus.myboutique.domain.enumeration.OrderStatus;
 import com.targa.labs.quarkus.myboutique.repository.OrderRepository;
+import com.targa.labs.quarkus.myboutique.repository.PaymentRepository;
 import com.targa.labs.quarkus.myboutique.web.dto.OrderDto;
 import com.targa.labs.quarkus.myboutique.web.dto.OrderItemDto;
 import org.slf4j.Logger;
@@ -25,9 +26,11 @@ public class OrderService {
     private final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderRepository orderRepository;
+    private final PaymentRepository paymentRepository;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, PaymentRepository paymentRepository) {
         this.orderRepository = orderRepository;
+        this.paymentRepository = paymentRepository;
     }
 
     public static OrderDto mapToDto(Order order) {
@@ -106,9 +109,12 @@ public class OrderService {
         );
     }
 
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Order : {}", id);
-        this.orderRepository.deleteById(id);
+        Order order = this.orderRepository.findById(id).orElseThrow(() -> new IllegalStateException(""));
+        paymentRepository.delete(order.getPayment());
+        orderRepository.delete(order);
     }
 
     public boolean existsById(Long id) {

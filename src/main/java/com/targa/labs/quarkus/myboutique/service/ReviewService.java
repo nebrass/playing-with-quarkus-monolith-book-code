@@ -1,6 +1,8 @@
 package com.targa.labs.quarkus.myboutique.service;
 
+import com.targa.labs.quarkus.myboutique.domain.Product;
 import com.targa.labs.quarkus.myboutique.domain.Review;
+import com.targa.labs.quarkus.myboutique.repository.ProductRepository;
 import com.targa.labs.quarkus.myboutique.repository.ReviewRepository;
 import com.targa.labs.quarkus.myboutique.web.dto.ReviewDto;
 import org.slf4j.Logger;
@@ -17,9 +19,11 @@ public class ReviewService {
     private final Logger log = LoggerFactory.getLogger(ReviewService.class);
 
     private final ReviewRepository reviewRepository;
+    private final ProductRepository productRepository;
 
-    public ReviewService(ReviewRepository reviewRepository) {
+    public ReviewService(ReviewRepository reviewRepository, ProductRepository productRepository) {
         this.reviewRepository = reviewRepository;
+        this.productRepository = productRepository;
     }
 
     public static ReviewDto mapToDto(Review review) {
@@ -34,9 +38,9 @@ public class ReviewService {
         return null;
     }
 
-    public List<ReviewDto> findAll() {
+    public List<ReviewDto> findReviewsByProductId(Long id) {
         log.debug("Request to get all Reviews");
-        return this.reviewRepository.findAll()
+        return this.reviewRepository.findReviewsByProductId(id)
                 .stream()
                 .map(ReviewService::mapToDto)
                 .collect(Collectors.toList());
@@ -48,23 +52,37 @@ public class ReviewService {
         return this.reviewRepository.findById(id).map(ReviewService::mapToDto).orElse(null);
     }
 
-    public ReviewDto createDto(ReviewDto reviewDto) {
-        log.debug("Request to create Review : {}", reviewDto);
-        return mapToDto(create(reviewDto));
-    }
+    public ReviewDto create(ReviewDto reviewDto, Long productId) {
+        log.debug("Request to create Review : {} ofr the Product {}", reviewDto, productId);
 
-    public Review create(ReviewDto reviewDto) {
-        return this.reviewRepository.save(
+        Product product = this.productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalStateException("Product with ID:" + productId + " was not found !"));
+
+        Review savedReview = this.reviewRepository.saveAndFlush(
                 new Review(
                         reviewDto.getTitle(),
                         reviewDto.getDescription(),
                         reviewDto.getRating()
                 )
         );
+
+        product.getReviews().add(savedReview);
+        this.productRepository.saveAndFlush(product);
+
+        return mapToDto(savedReview);
     }
 
-    public void delete(Long id) {
-        log.debug("Request to delete Review : {}", id);
-        this.reviewRepository.deleteById(id);
+    public void delete(Long reviewId) {
+        log.debug("Request to delete Review : {}", reviewId);
+
+        Review review = this.reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalStateException("Product with ID:" + reviewId + " was not found !"));
+
+        Product product = this.productRepository.findProductByReviewId(reviewId);
+
+        product.getReviews().remove(review);
+
+        this.productRepository.saveAndFlush(product);
+        this.reviewRepository.delete(review);
     }
 }

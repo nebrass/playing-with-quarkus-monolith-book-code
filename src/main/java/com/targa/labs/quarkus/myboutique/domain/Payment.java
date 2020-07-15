@@ -1,6 +1,9 @@
 package com.targa.labs.quarkus.myboutique.domain;
 
 import com.targa.labs.quarkus.myboutique.domain.enumeration.PaymentStatus;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +18,9 @@ import java.util.Objects;
 /**
  * A Payment.
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "payments")
 public class Payment extends AbstractEntity {
@@ -27,41 +33,9 @@ public class Payment extends AbstractEntity {
     @Column(name = "status", nullable = false)
     private PaymentStatus status;
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private Order order;
-
-    public Payment() {
-    }
-
-    public Payment(String paypalPaymentId, @NotNull PaymentStatus status, Order order) {
+    public Payment(String paypalPaymentId, @NotNull PaymentStatus status) {
         this.paypalPaymentId = paypalPaymentId;
         this.status = status;
-        this.order = order;
-    }
-
-    public String getPaypalPaymentId() {
-        return paypalPaymentId;
-    }
-
-    public void setPaypalPaymentId(String paypalPaymentId) {
-        this.paypalPaymentId = paypalPaymentId;
-    }
-
-    public PaymentStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(PaymentStatus status) {
-        this.status = status;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
     }
 
     @Override
@@ -82,7 +56,6 @@ public class Payment extends AbstractEntity {
         return "Payment{" +
                 "paypalPaymentId='" + paypalPaymentId + '\'' +
                 ", status=" + status +
-                ", order=" + order.getId() +
                 '}';
     }
 }

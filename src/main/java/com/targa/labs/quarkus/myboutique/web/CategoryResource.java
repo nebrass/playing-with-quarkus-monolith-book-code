@@ -1,8 +1,8 @@
 package com.targa.labs.quarkus.myboutique.web;
 
-import com.targa.labs.quarkus.myboutique.common.Web;
 import com.targa.labs.quarkus.myboutique.service.CategoryService;
 import com.targa.labs.quarkus.myboutique.web.dto.CategoryDto;
+import com.targa.labs.quarkus.myboutique.web.dto.ProductDto;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Consumes;
@@ -19,9 +19,8 @@ import java.util.List;
  * @author Nebrass Lamouchi
  */
 @ApplicationScoped
-@Path(Web.API + "/categories")
+@Path("/categories")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class CategoryResource {
 
     private final CategoryService categoryService;
@@ -41,7 +40,14 @@ public class CategoryResource {
         return this.categoryService.findById(id);
     }
 
+    @GET
+    @Path("/{id}/products")
+    public List<ProductDto> findProductsByCategoryId(@PathParam("id") Long id) {
+        return this.categoryService.findProductsByCategoryId(id);
+    }
+
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     public CategoryDto create(CategoryDto categoryDto) {
         return this.categoryService.create(categoryDto);
     }

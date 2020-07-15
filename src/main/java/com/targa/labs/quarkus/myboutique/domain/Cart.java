@@ -1,14 +1,24 @@
 package com.targa.labs.quarkus.myboutique.domain;
 
 import com.targa.labs.quarkus.myboutique.domain.enumeration.CartStatus;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
  * A Cart.
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "carts")
 public class Cart extends AbstractEntity {
@@ -19,9 +29,6 @@ public class Cart extends AbstractEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     private CartStatus status;
-
-    public Cart() {
-    }
 
     public Cart(Customer customer) {
         this.customer = customer;
