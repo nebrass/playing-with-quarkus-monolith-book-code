@@ -9,28 +9,23 @@ import javax.enterprise.context.ApplicationScoped;
 public class AddressService {
 
     public static AddressDto mapToDto(Address address) {
-        if (address != null) {
-            return new AddressDto(
-                    address.getAddress1(),
-                    address.getAddress2(),
-                    address.getCity(),
-                    address.getPostcode(),
-                    address.getCountry()
-            );
-        }
-        return null;
+        return new AddressDto(
+                address.getAddress1(),
+                address.getAddress2(),
+                address.getCity(),
+                address.getPostcode(),
+                address.getCountry()
+        );
+
     }
 
     public static Address createFromDto(AddressDto addressDto) {
-        if (addressDto != null) {
-            return new Address(
-                    addressDto.getAddress1(),
-                    addressDto.getAddress2(),
-                    addressDto.getCity(),
-                    addressDto.getPostcode(),
-                    addressDto.getCountry()
-            );
-        }
-        return null;
+        return new Address(
+                addressDto.getAddress1(),
+                addressDto.getAddress2(),
+                addressDto.getCity(),
+                addressDto.getPostcode(),
+                addressDto.getCountry()
+        );
     }
 }

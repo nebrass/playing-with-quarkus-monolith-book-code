@@ -2,7 +2,6 @@ package com.targa.labs.quarkus.myboutique.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +15,6 @@ import java.util.Objects;
  * A OrderItem.
  */
 @Getter
-@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "order_items")
@@ -58,6 +56,7 @@ public class OrderItem extends AbstractEntity {
         return "OrderItem{" +
                 "quantity=" + quantity +
                 ", product=" + product.getName() +
+                ", creationDate=" + getCreatedDate() +
                 '}';
     }
 }

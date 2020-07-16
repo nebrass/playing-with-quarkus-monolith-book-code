@@ -27,15 +27,12 @@ public class ReviewService {
     }
 
     public static ReviewDto mapToDto(Review review) {
-        if (review != null) {
-            return new ReviewDto(
-                    review.getId(),
-                    review.getTitle(),
-                    review.getDescription(),
-                    review.getRating()
-            );
-        }
-        return null;
+        return new ReviewDto(
+                review.getId(),
+                review.getTitle(),
+                review.getDescription(),
+                review.getRating()
+        );
     }
 
     public List<ReviewDto> findReviewsByProductId(Long id) {

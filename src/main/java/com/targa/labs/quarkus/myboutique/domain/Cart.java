@@ -30,29 +30,8 @@ public class Cart extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private CartStatus status;
 
-    public Cart(Customer customer) {
-        this.customer = customer;
-        this.status = CartStatus.NEW;
-    }
-
     public Cart(Customer customer, @NotNull CartStatus status) {
         this.customer = customer;
-        this.status = status;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public CartStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(CartStatus status) {
         this.status = status;
     }
 
@@ -75,6 +54,7 @@ public class Cart extends AbstractEntity {
         return "Cart{" +
                 "customer=" + customer +
                 ", status=" + status +
+                ", creationDate=" + getCreatedDate() +
                 '}';
     }
 }

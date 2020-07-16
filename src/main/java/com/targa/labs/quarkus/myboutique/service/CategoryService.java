@@ -28,15 +28,12 @@ public class CategoryService {
     }
 
     public static CategoryDto mapToDto(Category category, Long productsCount) {
-        if (category != null) {
-            return new CategoryDto(
-                    category.getId(),
-                    category.getName(),
-                    category.getDescription(),
-                    productsCount
-            );
-        }
-        return null;
+        return new CategoryDto(
+                category.getId(),
+                category.getName(),
+                category.getDescription(),
+                productsCount
+        );
     }
 
     public List<CategoryDto> findAll() {

@@ -24,10 +24,10 @@ import static org.hamcrest.Matchers.is;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-public class ProductResourceTest {
+class ProductResourceTest {
 
     @Test
-    public void testFindAll() {
+    void testFindAll() {
         when().get("/products").then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", greaterThan(0))
@@ -38,7 +38,7 @@ public class ProductResourceTest {
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         when().get("/products/3").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("MacBook Pro 13"))
@@ -48,7 +48,7 @@ public class ProductResourceTest {
     }
 
     @Test
-    public void testCreate() {
+    void testCreate() {
         Long count = when().get("/products/count").then()
                 .extract()
                 .body()
@@ -75,7 +75,7 @@ public class ProductResourceTest {
     }
 
     @Test
-    public void testDelete() {
+    void testDelete() {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("name", "Dell G5");
         requestParams.put("description", "Best gaming laptop from Dell");
@@ -106,13 +106,24 @@ public class ProductResourceTest {
     }
 
     @Test
-    public void testFindByCategoryId() {
+    void testFindByCategoryId() {
         List<Long> ids = when().get("/products/category/1").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
                 .getList("id", Long.class);
 
-        assertThat(ids.size()).isEqualTo(2);
+        assertThat(ids.size()).isEqualTo(3);
+    }
+
+    @Test
+    void testCountByCategoryId() {
+        Integer count = when().get("/products/count/category/1").then()
+                .statusCode(OK.getStatusCode())
+                .extract()
+                .as(Integer.class);
+
+        assertThat(count).isGreaterThanOrEqualTo(2);
+
     }
 }

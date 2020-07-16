@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static javax.transaction.Transactional.TxType.SUPPORTS;
 
 @ApplicationScoped
-@Transactional(SUPPORTS)
+@Transactional
 public class CartService {
 
     private final Logger log = LoggerFactory.getLogger(CartService.class);
@@ -30,14 +30,11 @@ public class CartService {
     CustomerRepository customerRepository;
 
     public static CartDto mapToDto(Cart cart) {
-        if (cart != null) {
-            return new CartDto(
-                    cart.getId(),
-                    CustomerService.mapToDto(cart.getCustomer()),
-                    cart.getStatus().name()
-            );
-        }
-        return null;
+        return new CartDto(
+                cart.getId(),
+                CustomerService.mapToDto(cart.getCustomer()),
+                cart.getStatus().name()
+        );
     }
 
     public List<CartDto> findAll() {

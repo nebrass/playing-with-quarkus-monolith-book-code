@@ -74,6 +74,7 @@ create table "payments"
     "last_modified_date" timestamp,
     "paypal_payment_id"  varchar(255),
     "status"             varchar(255) not null,
+    "amount"        decimal(10, 2) not null,
     "order_id"           bigint
 );
 alter table "payments"

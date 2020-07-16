@@ -4,8 +4,10 @@ import com.targa.labs.quarkus.myboutique.service.OrderService;
 import com.targa.labs.quarkus.myboutique.web.dto.OrderDto;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -41,6 +43,12 @@ public class OrderResource {
     @Path("/{id}")
     public OrderDto findById(@PathParam("id") Long id) {
         return this.orderService.findById(id);
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public OrderDto create(OrderDto orderDto) {
+        return this.orderService.create(orderDto);
     }
 
     @DELETE

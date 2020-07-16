@@ -19,17 +19,16 @@ import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-public class PaymentResourceTest {
+class PaymentResourceTest {
 
     @Test
-    public void testFindAll() {
+    void testFindAll() {
         List<Object> payments = when().get("/payments").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
@@ -40,7 +39,7 @@ public class PaymentResourceTest {
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         Map<String, Object> response = when().get("/payments/2").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
@@ -54,7 +53,7 @@ public class PaymentResourceTest {
     }
 
     @Test
-    public void testCreate() {
+    void testCreate() {
         Map<String, Object> requestParams = new HashMap<>();
 
         requestParams.put("orderId", 3);
@@ -78,7 +77,7 @@ public class PaymentResourceTest {
     }
 
     @Test
-    public void testDelete() {
+    void testDelete() {
         Map<String, Object> requestParams = new HashMap<>();
 
         requestParams.put("orderId", 3);
@@ -99,10 +98,10 @@ public class PaymentResourceTest {
     }
 
     @Test
-    public void testFindByRangeMax() {
+    void testFindByRangeMax() {
         when().get("/payments/price/800").then()
                 .statusCode(OK.getStatusCode())
-                .body("size()", is(greaterThan(0)))
+                .body("size()", is(1))
                 .body(containsString("orderId"))
                 .body(containsString("paypalPaymentId"))
                 .body(containsString("status"));

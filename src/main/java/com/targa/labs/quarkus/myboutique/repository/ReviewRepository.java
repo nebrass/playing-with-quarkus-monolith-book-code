@@ -1,6 +1,5 @@
 package com.targa.labs.quarkus.myboutique.repository;
 
-import com.targa.labs.quarkus.myboutique.domain.Product;
 import com.targa.labs.quarkus.myboutique.domain.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

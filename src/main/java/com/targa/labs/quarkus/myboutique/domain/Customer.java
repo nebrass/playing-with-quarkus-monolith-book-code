@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -37,7 +36,6 @@ public class Customer extends AbstractEntity {
     private String telephone;
 
     @OneToMany(mappedBy = "customer")
-    @JsonbTransient
     private Set<Cart> carts;
 
     @Column(name = "enabled", nullable = false)
@@ -79,6 +77,7 @@ public class Customer extends AbstractEntity {
                 ", email='" + email + '\'' +
                 ", telephone='" + telephone + '\'' +
                 ", enabled=" + enabled +
+                ", creationDate=" + getCreatedDate() +
                 '}';
     }
 }

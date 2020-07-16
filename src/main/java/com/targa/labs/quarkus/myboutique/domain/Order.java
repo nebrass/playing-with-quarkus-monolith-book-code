@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -53,10 +52,9 @@ public class Order extends AbstractEntity {
     private Address shipmentAddress;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JsonbTransient
     private Set<OrderItem> orderItems;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne
     private Cart cart;
 
     public Order(@NotNull BigDecimal price, @NotNull OrderStatus status,
@@ -99,6 +97,7 @@ public class Order extends AbstractEntity {
                 ", payment=" + payment +
                 ", shipmentAddress=" + shipmentAddress +
                 ", cart=" + cart.getId() +
+                ", creationDate=" + getCreatedDate() +
                 '}';
     }
 }

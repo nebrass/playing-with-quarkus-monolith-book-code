@@ -21,10 +21,10 @@ import static org.hamcrest.Matchers.is;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-public class ReviewResourceTest {
+class ReviewResourceTest {
 
     @Test
-    public void testFindAllByProduct() {
+    void testFindAllByProduct() {
         when().get("/reviews/product/1").then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", is(2))
@@ -35,7 +35,7 @@ public class ReviewResourceTest {
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         when().get("/reviews/2").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("id"))
@@ -45,7 +45,7 @@ public class ReviewResourceTest {
     }
 
     @Test
-    public void testCreate() {
+    void testCreate() {
         Integer count = when().get("/reviews/product/3").then()
                 .extract()
                 .body()
@@ -69,7 +69,7 @@ public class ReviewResourceTest {
     }
 
     @Test
-    public void testDelete() {
+    void testDelete() {
         Integer count = when().get("/reviews/product/2").then()
                 .extract()
                 .body()
@@ -83,7 +83,7 @@ public class ReviewResourceTest {
     }
 
     @Test
-    public void testReviewsDeletedWhenProductIsDeleted() {
+    void testReviewsDeletedWhenProductIsDeleted() {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("name", "Dell G5");
         requestParams.put("description", "Best gaming laptop from Dell");

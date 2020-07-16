@@ -1,7 +1,6 @@
 package com.targa.labs.quarkus.myboutique.service;
 
 import com.targa.labs.quarkus.myboutique.domain.Product;
-import com.targa.labs.quarkus.myboutique.domain.Review;
 import com.targa.labs.quarkus.myboutique.domain.enumeration.ProductStatus;
 import com.targa.labs.quarkus.myboutique.repository.CategoryRepository;
 import com.targa.labs.quarkus.myboutique.repository.ProductRepository;
@@ -29,19 +28,16 @@ public class ProductService {
     }
 
     public static ProductDto mapToDto(Product product) {
-        if (product != null) {
-            return new ProductDto(
-                    product.getId(),
-                    product.getName(),
-                    product.getDescription(),
-                    product.getPrice(),
-                    product.getStatus().name(),
-                    product.getSalesCounter(),
-                    product.getReviews().stream().map(ReviewService::mapToDto).collect(Collectors.toSet()),
-                    product.getCategory().getId()
-            );
-        }
-        return null;
+        return new ProductDto(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStatus().name(),
+                product.getSalesCounter(),
+                product.getReviews().stream().map(ReviewService::mapToDto).collect(Collectors.toSet()),
+                product.getCategory().getId()
+        );
     }
 
     public List<ProductDto> findAll() {
@@ -71,15 +67,6 @@ public class ProductService {
                         Collections.emptySet(),
                         categoryRepository.findById(productDto.getCategoryId()).orElse(null)
                 )));
-    }
-
-    public ProductDto addReview(Long productId, Review review) {
-        Product product = this.productRepository
-                .findById(productId)
-                .orElseThrow(() -> new IllegalStateException("The Product does not exist!"));
-        product.getReviews().add(review);
-        this.productRepository.saveAndFlush(product);
-        return mapToDto(product);
     }
 
     public void delete(Long id) {

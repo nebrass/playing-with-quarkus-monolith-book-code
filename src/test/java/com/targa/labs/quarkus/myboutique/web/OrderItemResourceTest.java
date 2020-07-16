@@ -18,23 +18,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-public class OrderItemResourceTest {
+class OrderItemResourceTest {
 
     @Test
-    public void testFindByOrderId() {
+    void testFindByOrderId() {
         when().get("/order-items/order/1").then()
                 .statusCode(OK.getStatusCode());
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         when().get("/order-items/1").then()
                 .statusCode(OK.getStatusCode());
     }
 
     @Test
-    public void testCreate() {
-        double totalPrice = when().get("/orders/3").then()
+    void testCreate() {
+        Double totalPrice = when().get("/orders/3").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
@@ -63,7 +63,7 @@ public class OrderItemResourceTest {
     }
 
     @Test
-    public void testDelete() {
+    void testDelete() {
         double totalPrice = when().get("/orders/1").then()
                 .statusCode(OK.getStatusCode())
                 .extract()

@@ -41,11 +41,11 @@ public class PaymentService {
         return null;
     }
 
-    public List<PaymentDto> findByPriceRange(double max) {
-        return this.orderRepository
-                .findAllByPriceBetween(BigDecimal.ZERO, BigDecimal.valueOf(max))
+    public List<PaymentDto> findByPriceRange(Double max) {
+        return this.paymentRepository
+                .findAllByAmountBetween(BigDecimal.ZERO, BigDecimal.valueOf(max))
                 .stream()
-                .map(order -> mapToDto(order.getPayment(), order.getId()))
+                .map(payment -> mapToDto(payment, findOrderByPaymentId(payment.getId()).getId()))
                 .collect(Collectors.toList());
     }
 
@@ -59,8 +59,7 @@ public class PaymentService {
 
     public PaymentDto findById(Long id) {
         log.debug("Request to get Payment : {}", id);
-        Order order = this.orderRepository.findByPaymentId(id)
-                .orElseThrow(() -> new IllegalStateException("No Order exists for the Payment ID " + id));
+        Order order = findOrderByPaymentId(id);
 
         return this.paymentRepository
                 .findById(id)
@@ -80,12 +79,19 @@ public class PaymentService {
 
         Payment payment = this.paymentRepository.saveAndFlush(new Payment(
                 paymentDto.getPaypalPaymentId(),
-                PaymentStatus.valueOf(paymentDto.getStatus())
+                PaymentStatus.valueOf(paymentDto.getStatus()),
+                order.getPrice()
         ));
 
         this.orderRepository.saveAndFlush(order);
 
         return mapToDto(payment, order.getId());
+    }
+
+
+    private Order findOrderByPaymentId(Long id) {
+        return this.orderRepository.findByPaymentId(id)
+                .orElseThrow(() -> new IllegalStateException("No Order exists for the Payment ID " + id));
     }
 
     public void delete(Long id) {

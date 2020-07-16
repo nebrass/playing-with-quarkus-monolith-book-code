@@ -2,7 +2,6 @@ package com.targa.labs.quarkus.myboutique.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +13,6 @@ import java.util.Objects;
  * A Category.
  */
 @Getter
-@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "categories")

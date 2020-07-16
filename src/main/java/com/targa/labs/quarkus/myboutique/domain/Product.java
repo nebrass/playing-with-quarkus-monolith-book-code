@@ -3,9 +3,7 @@ package com.targa.labs.quarkus.myboutique.domain;
 import com.targa.labs.quarkus.myboutique.domain.enumeration.ProductStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +25,6 @@ import java.util.Set;
  * A Product.
  */
 @Getter
-@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "products")
@@ -57,32 +54,11 @@ public class Product extends AbstractEntity {
     @JoinTable(name = "products_reviews",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "reviews_id"))
-    @JsonbTransient
     private Set<Review> reviews = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    public Product(@NotNull String name, @NotNull String description,
-                   @NotNull BigDecimal price, @NotNull ProductStatus status) {
-        super();
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.status = status;
-    }
-
-    public Product(@NotNull String name, @NotNull String description, @NotNull BigDecimal price,
-                   Integer salesCounter, Set<Review> reviews, Category category) {
-        super();
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.salesCounter = salesCounter;
-        this.reviews = reviews;
-        this.category = category;
-    }
 
     public Product(@NotNull String name, @NotNull String description, @NotNull BigDecimal price,
                    @NotNull ProductStatus status, Integer salesCounter, Set<Review> reviews, Category category) {
@@ -124,6 +100,7 @@ public class Product extends AbstractEntity {
                 ", salesCounter=" + salesCounter +
                 ", reviews=" + reviews +
                 ", category=" + category +
+                ", creationDate=" + getCreatedDate() +
                 '}';
     }
 }

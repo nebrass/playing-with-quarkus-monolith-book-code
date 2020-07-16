@@ -34,15 +34,12 @@ public class OrderItemService {
     }
 
     public static OrderItemDto mapToDto(OrderItem orderItem) {
-        if (orderItem != null) {
-            return new OrderItemDto(
-                    orderItem.getId(),
-                    orderItem.getQuantity(),
-                    orderItem.getProduct().getId(),
-                    orderItem.getOrder().getId()
-            );
-        }
-        return null;
+        return new OrderItemDto(
+                orderItem.getId(),
+                orderItem.getQuantity(),
+                orderItem.getProduct().getId(),
+                orderItem.getOrder().getId()
+        );
     }
 
     @Transactional

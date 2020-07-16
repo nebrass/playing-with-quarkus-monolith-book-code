@@ -1,9 +1,9 @@
 package com.targa.labs.quarkus.myboutique.service;
 
-import com.targa.labs.quarkus.myboutique.domain.Address;
 import com.targa.labs.quarkus.myboutique.domain.Cart;
 import com.targa.labs.quarkus.myboutique.domain.Order;
 import com.targa.labs.quarkus.myboutique.domain.enumeration.OrderStatus;
+import com.targa.labs.quarkus.myboutique.repository.CartRepository;
 import com.targa.labs.quarkus.myboutique.repository.OrderRepository;
 import com.targa.labs.quarkus.myboutique.repository.PaymentRepository;
 import com.targa.labs.quarkus.myboutique.web.dto.OrderDto;
@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,33 +28,33 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
+    private final CartRepository cartRepository;
 
-    public OrderService(OrderRepository orderRepository, PaymentRepository paymentRepository) {
+    public OrderService(OrderRepository orderRepository,
+                        PaymentRepository paymentRepository,
+                        CartRepository cartRepository) {
         this.orderRepository = orderRepository;
         this.paymentRepository = paymentRepository;
+        this.cartRepository = cartRepository;
     }
 
     public static OrderDto mapToDto(Order order) {
-        if (order != null) {
+        Set<OrderItemDto> orderItems = order
+                .getOrderItems()
+                .stream()
+                .map(OrderItemService::mapToDto)
+                .collect(Collectors.toSet());
 
-            Set<OrderItemDto> orderItems = order
-                    .getOrderItems()
-                    .stream()
-                    .map(OrderItemService::mapToDto)
-                    .collect(Collectors.toSet());
-
-            return new OrderDto(
-                    order.getId(),
-                    order.getPrice(),
-                    order.getStatus().name(),
-                    order.getShipped(),
-                    order.getPayment() != null ? order.getPayment().getId() : null,
-                    AddressService.mapToDto(order.getShipmentAddress()),
-                    orderItems,
-                    CartService.mapToDto(order.getCart())
-            );
-        }
-        return null;
+        return new OrderDto(
+                order.getId(),
+                order.getPrice(),
+                order.getStatus().name(),
+                order.getShipped(),
+                order.getPayment() != null ? order.getPayment().getId() : null,
+                AddressService.mapToDto(order.getShipmentAddress()),
+                orderItems,
+                CartService.mapToDto(order.getCart())
+        );
     }
 
     public List<OrderDto> findAll() {
@@ -79,6 +80,12 @@ public class OrderService {
 
     public OrderDto create(OrderDto orderDto) {
         log.debug("Request to create Order : {}", orderDto);
+
+        Long cartId = orderDto.getCart().getId();
+        Cart cart = this.cartRepository.findById(cartId)
+                .orElseThrow(() ->
+                        new IllegalStateException("The Cart with ID[" + cartId + "] was not found !"));
+
         return mapToDto(
                 this.orderRepository.save(
                         new Order(
@@ -88,23 +95,8 @@ public class OrderService {
                                 null,
                                 AddressService.createFromDto(orderDto.getShipmentAddress()),
                                 Collections.emptySet(),
-                                null
+                                cart
                         )
-                )
-        );
-    }
-
-    public Order create(Cart cart, Address address) {
-        log.debug("Request to create Order with a Cart : {}", cart);
-        return this.orderRepository.save(
-                new Order(
-                        BigDecimal.ZERO,
-                        OrderStatus.CREATION,
-                        null,
-                        null,
-                        address,
-                        Collections.emptySet(),
-                        cart
                 )
         );
     }
@@ -112,8 +104,12 @@ public class OrderService {
     @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Order : {}", id);
-        Order order = this.orderRepository.findById(id).orElseThrow(() -> new IllegalStateException(""));
-        paymentRepository.delete(order.getPayment());
+
+        Order order = this.orderRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Order with ID[" + id + "] cannot be found!"));
+
+        Optional.ofNullable(order.getPayment()).ifPresent(paymentRepository::delete);
+
         orderRepository.delete(order);
     }
 

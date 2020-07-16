@@ -20,9 +20,9 @@ import static org.hamcrest.Matchers.is;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-public class CategoryResourceTest {
+class CategoryResourceTest {
     @Test
-    public void testFindAll() {
+    void testFindAll() {
         when().get("/categories").then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", is(2))
@@ -33,7 +33,7 @@ public class CategoryResourceTest {
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         when().get("/categories/1").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("Phones & Smartphones"))
@@ -41,7 +41,7 @@ public class CategoryResourceTest {
     }
 
     @Test
-    public void testFindProductsByCategoryId() {
+    void testFindProductsByCategoryId() {
         when().get("/categories/1/products").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("categoryId"))
@@ -55,7 +55,7 @@ public class CategoryResourceTest {
     }
 
     @Test
-    public void testCreate() {
+    void testCreate() {
         Map<String, String> requestParams = new HashMap<>();
         requestParams.put("name", "Cars");
         requestParams.put("description", "New and used cars");
@@ -83,7 +83,7 @@ public class CategoryResourceTest {
     }
 
     @Test
-    public void testDelete() {
+    void testDelete() {
         Map<String, String> requestParams = new HashMap<>();
         requestParams.put("name", "Home");
         requestParams.put("description", "New and old homes");

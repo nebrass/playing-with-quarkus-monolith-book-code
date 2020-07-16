@@ -24,16 +24,13 @@ public class CustomerService {
     }
 
     public static CustomerDto mapToDto(Customer customer) {
-        if (customer != null) {
-            return new CustomerDto(
-                    customer.getId(),
-                    customer.getFirstName(),
-                    customer.getLastName(),
-                    customer.getEmail(),
-                    customer.getTelephone()
-            );
-        }
-        return null;
+        return new CustomerDto(
+                customer.getId(),
+                customer.getFirstName(),
+                customer.getLastName(),
+                customer.getEmail(),
+                customer.getTelephone()
+        );
     }
 
     public CustomerDto create(CustomerDto customerDto) {
@@ -67,7 +64,7 @@ public class CustomerService {
     }
 
     public List<CustomerDto> findAllActive() {
-        log.debug("Request to get all Customers");
+        log.debug("Request to get all active customers");
         return this.customerRepository.findAllByEnabled(true)
                 .stream()
                 .map(CustomerService::mapToDto)
@@ -75,7 +72,7 @@ public class CustomerService {
     }
 
     public List<CustomerDto> findAllInactive() {
-        log.debug("Request to get all Customers");
+        log.debug("Request to get all inactive customers");
         return this.customerRepository.findAllByEnabled(false)
                 .stream()
                 .map(CustomerService::mapToDto)
