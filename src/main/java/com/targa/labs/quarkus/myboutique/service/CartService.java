@@ -6,8 +6,7 @@ import com.targa.labs.quarkus.myboutique.domain.enumeration.CartStatus;
 import com.targa.labs.quarkus.myboutique.repository.CartRepository;
 import com.targa.labs.quarkus.myboutique.repository.CustomerRepository;
 import com.targa.labs.quarkus.myboutique.web.dto.CartDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -17,25 +16,16 @@ import java.util.stream.Collectors;
 
 import static javax.transaction.Transactional.TxType.SUPPORTS;
 
+@Slf4j
 @ApplicationScoped
 @Transactional
 public class CartService {
-
-    private final Logger log = LoggerFactory.getLogger(CartService.class);
 
     @Inject
     CartRepository cartRepository;
 
     @Inject
     CustomerRepository customerRepository;
-
-    public static CartDto mapToDto(Cart cart) {
-        return new CartDto(
-                cart.getId(),
-                CustomerService.mapToDto(cart.getCustomer()),
-                cart.getStatus().name()
-        );
-    }
 
     public List<CartDto> findAll() {
         log.debug("Request to get all Carts");
@@ -102,5 +92,13 @@ public class CartService {
         }
 
         return null;
+    }
+
+    public static CartDto mapToDto(Cart cart) {
+        return new CartDto(
+                cart.getId(),
+                CustomerService.mapToDto(cart.getCustomer()),
+                cart.getStatus().name()
+        );
     }
 }

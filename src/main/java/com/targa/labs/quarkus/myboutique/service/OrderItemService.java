@@ -7,40 +7,25 @@ import com.targa.labs.quarkus.myboutique.repository.OrderItemRepository;
 import com.targa.labs.quarkus.myboutique.repository.OrderRepository;
 import com.targa.labs.quarkus.myboutique.repository.ProductRepository;
 import com.targa.labs.quarkus.myboutique.web.dto.OrderItemDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @ApplicationScoped
 @Transactional
 public class OrderItemService {
 
-    private final Logger log = LoggerFactory.getLogger(OrderItemService.class);
-
-    private final OrderItemRepository orderItemRepository;
-    private final OrderRepository orderRepository;
-    private final ProductRepository productRepository;
-
-    public OrderItemService(OrderItemRepository orderItemRepository,
-                            OrderRepository orderRepository,
-                            ProductRepository productRepository) {
-        this.orderItemRepository = orderItemRepository;
-        this.orderRepository = orderRepository;
-        this.productRepository = productRepository;
-    }
-
-    public static OrderItemDto mapToDto(OrderItem orderItem) {
-        return new OrderItemDto(
-                orderItem.getId(),
-                orderItem.getQuantity(),
-                orderItem.getProduct().getId(),
-                orderItem.getOrder().getId()
-        );
-    }
+    @Inject
+    OrderItemRepository orderItemRepository;
+    @Inject
+    OrderRepository orderRepository;
+    @Inject
+    ProductRepository productRepository;
 
     @Transactional
     public OrderItemDto findById(Long id) {
@@ -100,5 +85,14 @@ public class OrderItemService {
                 .stream()
                 .map(OrderItemService::mapToDto)
                 .collect(Collectors.toList());
+    }
+
+    public static OrderItemDto mapToDto(OrderItem orderItem) {
+        return new OrderItemDto(
+                orderItem.getId(),
+                orderItem.getQuantity(),
+                orderItem.getProduct().getId(),
+                orderItem.getOrder().getId()
+        );
     }
 }

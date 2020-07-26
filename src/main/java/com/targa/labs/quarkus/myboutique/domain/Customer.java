@@ -3,6 +3,7 @@ package com.targa.labs.quarkus.myboutique.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString(callSuper = true)
 @Entity
 @Table(name = "customers")
 public class Customer extends AbstractEntity {
@@ -67,17 +69,5 @@ public class Customer extends AbstractEntity {
     @Override
     public int hashCode() {
         return Objects.hash(firstName, lastName, email, telephone, enabled);
-    }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", telephone='" + telephone + '\'' +
-                ", enabled=" + enabled +
-                ", creationDate=" + getCreatedDate() +
-                '}';
     }
 }

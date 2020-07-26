@@ -5,40 +5,24 @@ import com.targa.labs.quarkus.myboutique.domain.enumeration.ProductStatus;
 import com.targa.labs.quarkus.myboutique.repository.CategoryRepository;
 import com.targa.labs.quarkus.myboutique.repository.ProductRepository;
 import com.targa.labs.quarkus.myboutique.web.dto.ProductDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @ApplicationScoped
 @Transactional
 public class ProductService {
-    private final Logger log = LoggerFactory.getLogger(ProductService.class);
 
-    private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
-
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
-        this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-    }
-
-    public static ProductDto mapToDto(Product product) {
-        return new ProductDto(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                product.getStatus().name(),
-                product.getSalesCounter(),
-                product.getReviews().stream().map(ReviewService::mapToDto).collect(Collectors.toSet()),
-                product.getCategory().getId()
-        );
-    }
+    @Inject
+    ProductRepository productRepository;
+    @Inject
+    CategoryRepository categoryRepository;
 
     public List<ProductDto> findAll() {
         log.debug("Request to get all Products");
@@ -86,5 +70,18 @@ public class ProductService {
 
     public Long countByCategoryId(Long id) {
         return this.productRepository.countAllByCategoryId(id);
+    }
+
+    public static ProductDto mapToDto(Product product) {
+        return new ProductDto(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStatus().name(),
+                product.getSalesCounter(),
+                product.getReviews().stream().map(ReviewService::mapToDto).collect(Collectors.toSet()),
+                product.getCategory().getId()
+        );
     }
 }

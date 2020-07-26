@@ -4,6 +4,7 @@ import com.targa.labs.quarkus.myboutique.service.ReviewService;
 import com.targa.labs.quarkus.myboutique.web.dto.ReviewDto;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -22,11 +23,8 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class ReviewResource {
 
-    private final ReviewService reviewService;
-
-    public ReviewResource(ReviewService reviewService) {
-        this.reviewService = reviewService;
-    }
+    @Inject
+    ReviewService reviewService;
 
     @GET
     @Path("/product/{id}")

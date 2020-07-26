@@ -3,35 +3,22 @@ package com.targa.labs.quarkus.myboutique.service;
 import com.targa.labs.quarkus.myboutique.domain.Customer;
 import com.targa.labs.quarkus.myboutique.repository.CustomerRepository;
 import com.targa.labs.quarkus.myboutique.web.dto.CustomerDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @ApplicationScoped
 @Transactional
 public class CustomerService {
-    private final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
-    private final CustomerRepository customerRepository;
-
-    public CustomerService(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
-
-    public static CustomerDto mapToDto(Customer customer) {
-        return new CustomerDto(
-                customer.getId(),
-                customer.getFirstName(),
-                customer.getLastName(),
-                customer.getEmail(),
-                customer.getTelephone()
-        );
-    }
+    @Inject
+    CustomerRepository customerRepository;
 
     public CustomerDto create(CustomerDto customerDto) {
         log.debug("Request to create Customer : {}", customerDto);
@@ -87,5 +74,15 @@ public class CustomerService {
 
         customer.setEnabled(false);
         this.customerRepository.save(customer);
+    }
+
+    public static CustomerDto mapToDto(Customer customer) {
+        return new CustomerDto(
+                customer.getId(),
+                customer.getFirstName(),
+                customer.getLastName(),
+                customer.getEmail(),
+                customer.getTelephone()
+        );
     }
 }

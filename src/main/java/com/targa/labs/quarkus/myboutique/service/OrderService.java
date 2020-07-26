@@ -8,10 +8,10 @@ import com.targa.labs.quarkus.myboutique.repository.OrderRepository;
 import com.targa.labs.quarkus.myboutique.repository.PaymentRepository;
 import com.targa.labs.quarkus.myboutique.web.dto.OrderDto;
 import com.targa.labs.quarkus.myboutique.web.dto.OrderItemDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -20,42 +20,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @ApplicationScoped
 @Transactional
 public class OrderService {
 
-    private final Logger log = LoggerFactory.getLogger(OrderService.class);
-
-    private final OrderRepository orderRepository;
-    private final PaymentRepository paymentRepository;
-    private final CartRepository cartRepository;
-
-    public OrderService(OrderRepository orderRepository,
-                        PaymentRepository paymentRepository,
-                        CartRepository cartRepository) {
-        this.orderRepository = orderRepository;
-        this.paymentRepository = paymentRepository;
-        this.cartRepository = cartRepository;
-    }
-
-    public static OrderDto mapToDto(Order order) {
-        Set<OrderItemDto> orderItems = order
-                .getOrderItems()
-                .stream()
-                .map(OrderItemService::mapToDto)
-                .collect(Collectors.toSet());
-
-        return new OrderDto(
-                order.getId(),
-                order.getPrice(),
-                order.getStatus().name(),
-                order.getShipped(),
-                order.getPayment() != null ? order.getPayment().getId() : null,
-                AddressService.mapToDto(order.getShipmentAddress()),
-                orderItems,
-                CartService.mapToDto(order.getCart())
-        );
-    }
+    @Inject
+    OrderRepository orderRepository;
+    @Inject
+    PaymentRepository paymentRepository;
+    @Inject
+    CartRepository cartRepository;
 
     public List<OrderDto> findAll() {
         log.debug("Request to get all Orders");
@@ -115,5 +90,24 @@ public class OrderService {
 
     public boolean existsById(Long id) {
         return this.orderRepository.existsById(id);
+    }
+
+    public static OrderDto mapToDto(Order order) {
+        Set<OrderItemDto> orderItems = order
+                .getOrderItems()
+                .stream()
+                .map(OrderItemService::mapToDto)
+                .collect(Collectors.toSet());
+
+        return new OrderDto(
+                order.getId(),
+                order.getPrice(),
+                order.getStatus().name(),
+                order.getShipped(),
+                order.getPayment() != null ? order.getPayment().getId() : null,
+                AddressService.mapToDto(order.getShipmentAddress()),
+                orderItems,
+                CartService.mapToDto(order.getCart())
+        );
     }
 }

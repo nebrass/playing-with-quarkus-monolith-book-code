@@ -2,6 +2,7 @@ package com.targa.labs.quarkus.myboutique.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import java.util.Objects;
  */
 @Getter
 @NoArgsConstructor
+@ToString(callSuper = true)
 @Entity
 @Table(name = "order_items")
 public class OrderItem extends AbstractEntity {
@@ -49,14 +51,5 @@ public class OrderItem extends AbstractEntity {
     @Override
     public int hashCode() {
         return Objects.hash(quantity, product, order);
-    }
-
-    @Override
-    public String toString() {
-        return "OrderItem{" +
-                "quantity=" + quantity +
-                ", product=" + product.getName() +
-                ", creationDate=" + getCreatedDate() +
-                '}';
     }
 }

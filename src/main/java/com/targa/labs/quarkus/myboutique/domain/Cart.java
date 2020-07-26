@@ -4,6 +4,7 @@ import com.targa.labs.quarkus.myboutique.domain.enumeration.CartStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,6 +20,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString(callSuper = true)
 @Entity
 @Table(name = "carts")
 public class Cart extends AbstractEntity {
@@ -47,14 +49,5 @@ public class Cart extends AbstractEntity {
     @Override
     public int hashCode() {
         return Objects.hash(customer, status);
-    }
-
-    @Override
-    public String toString() {
-        return "Cart{" +
-                "customer=" + customer +
-                ", status=" + status +
-                ", creationDate=" + getCreatedDate() +
-                '}';
     }
 }

@@ -4,6 +4,7 @@ import com.targa.labs.quarkus.myboutique.service.OrderService;
 import com.targa.labs.quarkus.myboutique.web.dto.OrderDto;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -22,11 +23,8 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class OrderResource {
 
-    private final OrderService orderService;
-
-    public OrderResource(OrderService orderService) {
-        this.orderService = orderService;
-    }
+    @Inject
+    OrderService orderService;
 
     @GET
     public List<OrderDto> findAll() {

@@ -4,6 +4,7 @@ import com.targa.labs.quarkus.myboutique.service.PaymentService;
 import com.targa.labs.quarkus.myboutique.web.dto.PaymentDto;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -22,11 +23,8 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class PaymentResource {
 
-    private final PaymentService paymentService;
-
-    public PaymentResource(PaymentService paymentService) {
-        this.paymentService = paymentService;
-    }
+    @Inject
+    PaymentService paymentService;
 
     @GET
     public List<PaymentDto> findAll() {

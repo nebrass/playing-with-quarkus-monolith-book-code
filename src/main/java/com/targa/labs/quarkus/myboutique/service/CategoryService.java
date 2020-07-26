@@ -5,36 +5,23 @@ import com.targa.labs.quarkus.myboutique.repository.CategoryRepository;
 import com.targa.labs.quarkus.myboutique.repository.ProductRepository;
 import com.targa.labs.quarkus.myboutique.web.dto.CategoryDto;
 import com.targa.labs.quarkus.myboutique.web.dto.ProductDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @ApplicationScoped
 @Transactional
 public class CategoryService {
 
-    private final Logger log = LoggerFactory.getLogger(CategoryService.class);
-
-    private final CategoryRepository categoryRepository;
-    private final ProductRepository productRepository;
-
-    public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository) {
-        this.categoryRepository = categoryRepository;
-        this.productRepository = productRepository;
-    }
-
-    public static CategoryDto mapToDto(Category category, Long productsCount) {
-        return new CategoryDto(
-                category.getId(),
-                category.getName(),
-                category.getDescription(),
-                productsCount
-        );
-    }
+    @Inject
+    CategoryRepository categoryRepository;
+    @Inject
+    ProductRepository productRepository;
 
     public List<CategoryDto> findAll() {
         log.debug("Request to get all Categories");
@@ -71,5 +58,14 @@ public class CategoryService {
                 .stream()
                 .map(ProductService::mapToDto)
                 .collect(Collectors.toList());
+    }
+
+    public static CategoryDto mapToDto(Category category, Long productsCount) {
+        return new CategoryDto(
+                category.getId(),
+                category.getName(),
+                category.getDescription(),
+                productsCount
+        );
     }
 }

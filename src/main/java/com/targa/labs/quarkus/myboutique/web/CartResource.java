@@ -4,6 +4,7 @@ import com.targa.labs.quarkus.myboutique.service.CartService;
 import com.targa.labs.quarkus.myboutique.web.dto.CartDto;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -21,11 +22,8 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class CartResource {
 
-    private final CartService cartService;
-
-    public CartResource(CartService cartService) {
-        this.cartService = cartService;
-    }
+    @Inject
+    CartService cartService;
 
     @GET
     public List<CartDto> findAll() {

@@ -4,6 +4,7 @@ import com.targa.labs.quarkus.myboutique.service.CustomerService;
 import com.targa.labs.quarkus.myboutique.web.dto.CustomerDto;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -20,14 +21,10 @@ import java.util.List;
 @ApplicationScoped
 @Path("/customers")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class CustomerResource {
 
-    private final CustomerService customerService;
-
-    public CustomerResource(CustomerService customerService) {
-        this.customerService = customerService;
-    }
+    @Inject
+    CustomerService customerService;
 
     @GET
     public List<CustomerDto> findAll() {
@@ -53,6 +50,7 @@ public class CustomerResource {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     public CustomerDto create(CustomerDto customerDto) {
         return this.customerService.create(customerDto);
     }

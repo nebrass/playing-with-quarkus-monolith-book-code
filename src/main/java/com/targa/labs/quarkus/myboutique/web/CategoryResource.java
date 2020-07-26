@@ -5,6 +5,7 @@ import com.targa.labs.quarkus.myboutique.web.dto.CategoryDto;
 import com.targa.labs.quarkus.myboutique.web.dto.ProductDto;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -23,11 +24,8 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class CategoryResource {
 
-    private final CategoryService categoryService;
-
-    public CategoryResource(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+    @Inject
+    CategoryService categoryService;
 
     @GET
     public List<CategoryDto> findAll() {

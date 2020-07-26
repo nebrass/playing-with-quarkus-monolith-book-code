@@ -3,6 +3,7 @@ package com.targa.labs.quarkus.myboutique.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -16,6 +17,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Embeddable
 public class Address {
 
@@ -53,16 +55,5 @@ public class Address {
     @Override
     public int hashCode() {
         return Objects.hash(address1, address2, city, postcode, country);
-    }
-
-    @Override
-    public String toString() {
-        return "Address{" +
-                "address1='" + address1 + '\'' +
-                ", address2='" + address2 + '\'' +
-                ", city='" + city + '\'' +
-                ", postcode='" + postcode + '\'' +
-                ", country='" + country + '\'' +
-                '}';
     }
 }

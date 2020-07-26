@@ -1,8 +1,10 @@
 package com.targa.labs.quarkus.myboutique.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,8 +15,9 @@ import java.time.Instant;
  * Base Entity class for entities which will hold creation and last modification date.
  */
 @Getter
+@Setter
 @MappedSuperclass
-//@EntityListeners(AuditingEntityListener.class)
+@EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractEntity {
 
     @Id
@@ -22,11 +25,8 @@ public abstract class AbstractEntity {
     private Long id;
 
     @Column(name = "created_date", nullable = false)
-    private Instant createdDate = Instant.now();
+    private Instant createdDate;
 
-    /*
-    TODO: Add Entity Listeners for updates
     @Column(name = "last_modified_date")
-    private Instant lastModifiedDate = Instant.now();
-     */
+    private Instant lastModifiedDate;
 }

@@ -4,6 +4,7 @@ import com.targa.labs.quarkus.myboutique.domain.enumeration.OrderStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,11 +24,12 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * A Orders.
+ * An Order.
  */
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString(callSuper = true)
 @Entity
 @Table(name = "orders")
 public class Order extends AbstractEntity {
@@ -86,18 +88,5 @@ public class Order extends AbstractEntity {
     @Override
     public int hashCode() {
         return Objects.hash(price, status, shipped, payment, shipmentAddress, cart);
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "totalPrice=" + price +
-                ", status=" + status +
-                ", shipped=" + shipped +
-                ", payment=" + payment +
-                ", shipmentAddress=" + shipmentAddress +
-                ", cart=" + cart.getId() +
-                ", creationDate=" + getCreatedDate() +
-                '}';
     }
 }

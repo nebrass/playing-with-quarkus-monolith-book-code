@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.targa.labs</groupId>
-    <artifactId>myboutique-quarkus</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>quarkushop</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>myboutique-quarkus</name>
+    <name>quarkushop</name>
     <description>Demo project for Playing with Java Microservices with Quarkus and Kubernetes</description>
 
     <properties>
@@ -61,10 +61,6 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-orm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-orm-panache</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>

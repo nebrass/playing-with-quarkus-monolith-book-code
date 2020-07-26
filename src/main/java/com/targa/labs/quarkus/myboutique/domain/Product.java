@@ -3,6 +3,7 @@ package com.targa.labs.quarkus.myboutique.domain;
 import com.targa.labs.quarkus.myboutique.domain.enumeration.ProductStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,6 +27,7 @@ import java.util.Set;
  */
 @Getter
 @NoArgsConstructor
+@ToString(callSuper = true)
 @Entity
 @Table(name = "products")
 public class Product extends AbstractEntity {
@@ -88,19 +90,5 @@ public class Product extends AbstractEntity {
     @Override
     public int hashCode() {
         return Objects.hash(name, description, price, status, salesCounter, reviews, category);
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", status=" + status +
-                ", salesCounter=" + salesCounter +
-                ", reviews=" + reviews +
-                ", category=" + category +
-                ", creationDate=" + getCreatedDate() +
-                '}';
     }
 }

@@ -7,39 +7,24 @@ import com.targa.labs.quarkus.myboutique.domain.enumeration.PaymentStatus;
 import com.targa.labs.quarkus.myboutique.repository.OrderRepository;
 import com.targa.labs.quarkus.myboutique.repository.PaymentRepository;
 import com.targa.labs.quarkus.myboutique.web.dto.PaymentDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @ApplicationScoped
 @Transactional
 public class PaymentService {
-    private final Logger log = LoggerFactory.getLogger(PaymentService.class);
 
-    private final PaymentRepository paymentRepository;
-    private final OrderRepository orderRepository;
-
-    public PaymentService(PaymentRepository paymentRepository, OrderRepository orderRepository) {
-        this.paymentRepository = paymentRepository;
-        this.orderRepository = orderRepository;
-    }
-
-    public static PaymentDto mapToDto(Payment payment, Long orderId) {
-        if (payment != null) {
-            return new PaymentDto(
-                    payment.getId(),
-                    payment.getPaypalPaymentId(),
-                    payment.getStatus().name(),
-                    orderId
-            );
-        }
-        return null;
-    }
+    @Inject
+    PaymentRepository paymentRepository;
+    @Inject
+    OrderRepository orderRepository;
 
     public List<PaymentDto> findByPriceRange(Double max) {
         return this.paymentRepository
@@ -97,5 +82,17 @@ public class PaymentService {
     public void delete(Long id) {
         log.debug("Request to delete Payment : {}", id);
         this.paymentRepository.deleteById(id);
+    }
+
+    public static PaymentDto mapToDto(Payment payment, Long orderId) {
+        if (payment != null) {
+            return new PaymentDto(
+                    payment.getId(),
+                    payment.getPaypalPaymentId(),
+                    payment.getStatus().name(),
+                    orderId
+            );
+        }
+        return null;
     }
 }

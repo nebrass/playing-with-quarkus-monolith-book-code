@@ -2,6 +2,7 @@ package com.targa.labs.quarkus.myboutique.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import java.util.Objects;
  */
 @Getter
 @NoArgsConstructor
+@ToString(callSuper = true)
 @Entity
 @Table(name = "categories")
 public class Category extends AbstractEntity {
@@ -43,13 +45,5 @@ public class Category extends AbstractEntity {
     @Override
     public int hashCode() {
         return Objects.hash(name, description);
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

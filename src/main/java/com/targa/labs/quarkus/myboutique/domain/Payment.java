@@ -3,6 +3,7 @@ package com.targa.labs.quarkus.myboutique.domain;
 import com.targa.labs.quarkus.myboutique.domain.enumeration.PaymentStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import java.util.Objects;
  */
 @Getter
 @NoArgsConstructor
+@ToString(callSuper = true)
 @Entity
 @Table(name = "payments")
 public class Payment extends AbstractEntity {
@@ -51,15 +53,5 @@ public class Payment extends AbstractEntity {
     @Override
     public int hashCode() {
         return Objects.hash(paypalPaymentId);
-    }
-
-    @Override
-    public String toString() {
-        return "Payment{" +
-                "paypalPaymentId='" + paypalPaymentId + '\'' +
-                ", status=" + status +
-                ", amount=" + amount +
-                ", creationDate=" + getCreatedDate() +
-                '}';
     }
 }

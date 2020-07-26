@@ -5,35 +5,23 @@ import com.targa.labs.quarkus.myboutique.domain.Review;
 import com.targa.labs.quarkus.myboutique.repository.ProductRepository;
 import com.targa.labs.quarkus.myboutique.repository.ReviewRepository;
 import com.targa.labs.quarkus.myboutique.web.dto.ReviewDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @ApplicationScoped
 @Transactional
 public class ReviewService {
-    private final Logger log = LoggerFactory.getLogger(ReviewService.class);
 
-    private final ReviewRepository reviewRepository;
-    private final ProductRepository productRepository;
-
-    public ReviewService(ReviewRepository reviewRepository, ProductRepository productRepository) {
-        this.reviewRepository = reviewRepository;
-        this.productRepository = productRepository;
-    }
-
-    public static ReviewDto mapToDto(Review review) {
-        return new ReviewDto(
-                review.getId(),
-                review.getTitle(),
-                review.getDescription(),
-                review.getRating()
-        );
-    }
+    @Inject
+    ReviewRepository reviewRepository;
+    @Inject
+    ProductRepository productRepository;
 
     public List<ReviewDto> findReviewsByProductId(Long id) {
         log.debug("Request to get all Reviews");
@@ -81,5 +69,14 @@ public class ReviewService {
 
         this.productRepository.saveAndFlush(product);
         this.reviewRepository.delete(review);
+    }
+
+    public static ReviewDto mapToDto(Review review) {
+        return new ReviewDto(
+                review.getId(),
+                review.getTitle(),
+                review.getDescription(),
+                review.getRating()
+        );
     }
 }
