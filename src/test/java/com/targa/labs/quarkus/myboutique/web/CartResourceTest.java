@@ -123,17 +123,19 @@ class CartResourceTest {
         requestParams.put("lastName", "Berenson");
         requestParams.put("email", "call.saul@mail.com");
 
-        Integer newCustomerId = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        //noinspection WrapperTypeMayBePrimitive Cant be primitive because null can be returned if the request fails
+        Long newCustomerId = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams).post("/customers").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
-                .getInt("id");
+                .getLong("id");
 
         Long newCartId = when().post("/carts/customer/" + newCustomerId).then()
                 .statusCode(OK.getStatusCode())
                 .extract()
-                .jsonPath().getLong("id");
+                .jsonPath()
+                .getLong("id");
 
         when().post("/carts/customer/" + newCustomerId).then()
                 .statusCode(INTERNAL_SERVER_ERROR.getStatusCode())

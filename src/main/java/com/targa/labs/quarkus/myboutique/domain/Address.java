@@ -32,12 +32,12 @@ public class Address {
 
     @NotNull
     @Size(max = 10)
-    @Column(name = "postcode", length = 10)//, nullable = false)
+    @Column(name = "postcode", length = 10, nullable = false)
     private String postcode;
 
     @NotNull
     @Size(max = 2)
-    @Column(name = "country", length = 2)//, nullable = false)
+    @Column(name = "country", length = 2, nullable = false)
     private String country;
 
     @Override
