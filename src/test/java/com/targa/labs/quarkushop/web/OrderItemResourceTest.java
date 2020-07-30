@@ -1,10 +1,8 @@
 package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.utils.TestContainerResource;
-import io.quarkus.runtime.configuration.ProfileManager;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -20,32 +18,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-public class OrderItemResourceTest {
-
-    private static String PREFIX = "";
-
-    @BeforeAll
-    static void init() {
-        if ("prod".equalsIgnoreCase(ProfileManager.getActiveProfile())) {
-            PREFIX = "/api";
-        }
-    }
+class OrderItemResourceTest {
 
     @Test
     void testFindByOrderId() {
-        get(PREFIX + "/order-items/order/1").then()
+        get("/order-items/order/1").then()
                 .statusCode(OK.getStatusCode());
     }
 
     @Test
     void testFindById() {
-        get(PREFIX + "/order-items/1").then()
+        get("/order-items/1").then()
                 .statusCode(OK.getStatusCode());
     }
 
     @Test
     void testCreate() {
-        var totalPrice = get(PREFIX + "/orders/3").then()
+        var totalPrice = get("/orders/3").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
@@ -60,11 +49,11 @@ public class OrderItemResourceTest {
 
         given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post(PREFIX + "/order-items/")
+                .post("/order-items/")
                 .then()
                 .statusCode(OK.getStatusCode());
 
-        totalPrice = get(PREFIX + "/orders/3").then()
+        totalPrice = get("/orders/3").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
@@ -75,7 +64,7 @@ public class OrderItemResourceTest {
 
     @Test
     void testDelete() {
-        var totalPrice = get(PREFIX + "/orders/1").then()
+        var totalPrice = get("/orders/1").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
@@ -83,10 +72,10 @@ public class OrderItemResourceTest {
 
         assertThat(totalPrice).isEqualTo(999);
 
-        delete(PREFIX + "/order-items/1").then()
+        delete("/order-items/1").then()
                 .statusCode(NO_CONTENT.getStatusCode());
 
-        totalPrice = get(PREFIX + "/orders/1").then()
+        totalPrice = get("/orders/1").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()

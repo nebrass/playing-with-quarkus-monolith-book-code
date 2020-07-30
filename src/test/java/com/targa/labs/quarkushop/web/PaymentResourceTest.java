@@ -2,10 +2,8 @@ package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.domain.enumeration.PaymentStatus;
 import com.targa.labs.quarkushop.utils.TestContainerResource;
-import io.quarkus.runtime.configuration.ProfileManager;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -26,20 +24,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-public class PaymentResourceTest {
-
-    private static String PREFIX = "";
-
-    @BeforeAll
-    static void init() {
-        if ("prod".equalsIgnoreCase(ProfileManager.getActiveProfile())) {
-            PREFIX = "/api";
-        }
-    }
+class PaymentResourceTest {
 
     @Test
     void testFindAll() {
-        var payments = get(PREFIX + "/payments").then()
+        var payments = get("/payments").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
@@ -50,7 +39,7 @@ public class PaymentResourceTest {
 
     @Test
     void testFindById() {
-        var response = get(PREFIX + "/payments/2").then()
+        var response = get("/payments/2").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
@@ -72,7 +61,7 @@ public class PaymentResourceTest {
 
         var response = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post(PREFIX + "/payments")
+                .post("/payments")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
@@ -96,20 +85,20 @@ public class PaymentResourceTest {
 
         var createdPaymentId = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post(PREFIX + "/payments")
+                .post("/payments")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
                 .getLong("id");
 
-        delete(PREFIX + "/payments/" + createdPaymentId).then()
+        delete("/payments/" + createdPaymentId).then()
                 .statusCode(NO_CONTENT.getStatusCode());
     }
 
     @Test
     void testFindByRangeMax() {
-        get(PREFIX + "/payments/price/800").then()
+        get("/payments/price/800").then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", is(1))
                 .body(containsString("orderId"))

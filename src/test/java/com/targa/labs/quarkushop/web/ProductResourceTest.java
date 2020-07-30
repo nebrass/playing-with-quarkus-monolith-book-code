@@ -1,10 +1,8 @@
 package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.utils.TestContainerResource;
-import io.quarkus.runtime.configuration.ProfileManager;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -25,20 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-public class ProductResourceTest {
-
-    private static String PREFIX = "";
-
-    @BeforeAll
-    static void init() {
-        if ("prod".equalsIgnoreCase(ProfileManager.getActiveProfile())) {
-            PREFIX = "/api";
-        }
-    }
+class ProductResourceTest {
 
     @Test
     void testFindAll() {
-        get(PREFIX + "/products").then()
+        get("/products").then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", greaterThan(0))
                 .body(containsString("name"))
@@ -49,7 +38,7 @@ public class ProductResourceTest {
 
     @Test
     void testFindById() {
-        get(PREFIX + "/products/3").then()
+        get("/products/3").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("MacBook Pro 13"))
                 .body(containsString("1999.00"))
@@ -59,7 +48,7 @@ public class ProductResourceTest {
 
     @Test
     void testCreate() {
-        var count = get(PREFIX + "/products/count").then()
+        var count = get("/products/count").then()
                 .extract()
                 .body()
                 .as(Long.class);
@@ -74,13 +63,13 @@ public class ProductResourceTest {
 
         given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post(PREFIX + "/products")
+                .post("/products")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("id"))
                 .body(containsString("Dell G5"));
 
-        get(PREFIX + "/products/count").then()
+        get("/products/count").then()
                 .body(containsString(String.valueOf(count + 1)));
     }
 
@@ -96,7 +85,7 @@ public class ProductResourceTest {
 
         var response = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post(PREFIX + "/products")
+                .post("/products")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
@@ -107,17 +96,17 @@ public class ProductResourceTest {
 
         var newProductID = (Integer) response.get("id");
 
-        delete(PREFIX + "/products/" + newProductID).then()
+        delete("/products/" + newProductID).then()
                 .statusCode(NO_CONTENT.getStatusCode());
 
-        get(PREFIX + "/products/" + newProductID).then()
+        get("/products/" + newProductID).then()
                 .statusCode(NO_CONTENT.getStatusCode())
                 .body(is(emptyString()));
     }
 
     @Test
     void testFindByCategoryId() {
-        var ids = get(PREFIX + "/products/category/1").then()
+        var ids = get("/products/category/1").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
@@ -128,7 +117,7 @@ public class ProductResourceTest {
 
     @Test
     void testCountByCategoryId() {
-        var count = get(PREFIX + "/products/count/category/1").then()
+        var count = get("/products/count/category/1").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .as(Integer.class);

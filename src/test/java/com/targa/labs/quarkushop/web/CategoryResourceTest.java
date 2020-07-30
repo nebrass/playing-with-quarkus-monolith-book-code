@@ -1,10 +1,8 @@
 package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.utils.TestContainerResource;
-import io.quarkus.runtime.configuration.ProfileManager;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -22,20 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-public class CategoryResourceTest {
-
-    private static String PREFIX = "";
-
-    @BeforeAll
-    static void init() {
-        if ("prod".equalsIgnoreCase(ProfileManager.getActiveProfile())) {
-            PREFIX = "/api";
-        }
-    }
+class CategoryResourceTest {
 
     @Test
     void testFindAll() {
-        get(PREFIX + "/categories").then()
+        get("/categories").then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", is(2))
                 .body(containsString("Phones & Smartphones"))
@@ -46,7 +35,7 @@ public class CategoryResourceTest {
 
     @Test
     void testFindById() {
-        get(PREFIX + "/categories/1").then()
+        get("/categories/1").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("Phones & Smartphones"))
                 .body(containsString("Mobile"));
@@ -54,7 +43,7 @@ public class CategoryResourceTest {
 
     @Test
     void testFindProductsByCategoryId() {
-        get(PREFIX + "/categories/1/products").then()
+        get("/categories/1/products").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("categoryId"))
                 .body(containsString("description"))
@@ -74,7 +63,7 @@ public class CategoryResourceTest {
 
         var response = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post(PREFIX + "/categories")
+                .post("/categories")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
@@ -85,12 +74,12 @@ public class CategoryResourceTest {
 
         var newProductID = (Integer) response.get("id");
 
-        get(PREFIX + "/categories/" + newProductID).then()
+        get("/categories/" + newProductID).then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("Cars"))
                 .body(containsString("New and used cars"));
 
-        delete(PREFIX + "/categories/" + newProductID).then()
+        delete("/categories/" + newProductID).then()
                 .statusCode(NO_CONTENT.getStatusCode());
     }
 
@@ -102,7 +91,7 @@ public class CategoryResourceTest {
 
         var response = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post(PREFIX + "/categories")
+                .post("/categories")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
@@ -113,15 +102,15 @@ public class CategoryResourceTest {
 
         var newProductID = (Integer) response.get("id");
 
-        get(PREFIX + "/categories/" + newProductID).then()
+        get("/categories/" + newProductID).then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("Home"))
                 .body(containsString("New and old homes"));
 
-        delete(PREFIX + "/categories/" + newProductID).then()
+        delete("/categories/" + newProductID).then()
                 .statusCode(NO_CONTENT.getStatusCode());
 
-        get(PREFIX + "/categories/" + newProductID).then()
+        get("/categories/" + newProductID).then()
                 .statusCode(NO_CONTENT.getStatusCode());
     }
 }

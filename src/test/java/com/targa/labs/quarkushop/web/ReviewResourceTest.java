@@ -1,10 +1,8 @@
 package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.utils.TestContainerResource;
-import io.quarkus.runtime.configuration.ProfileManager;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -22,20 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-public class ReviewResourceTest {
-
-    private static String PREFIX = "";
-
-    @BeforeAll
-    static void init() {
-        if ("prod".equalsIgnoreCase(ProfileManager.getActiveProfile())) {
-            PREFIX = "/api";
-        }
-    }
+class ReviewResourceTest {
 
     @Test
     void testFindAllByProduct() {
-        get(PREFIX + "/reviews/product/1").then()
+        get("/reviews/product/1").then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", is(2))
                 .body(containsString("id"))
@@ -46,7 +35,7 @@ public class ReviewResourceTest {
 
     @Test
     void testFindById() {
-        get(PREFIX + "/reviews/2").then()
+        get("/reviews/2").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("id"))
                 .body(containsString("title"))
@@ -56,7 +45,7 @@ public class ReviewResourceTest {
 
     @Test
     void testCreate() {
-        Integer count = get(PREFIX + "/reviews/product/3").then()
+        Integer count = get("/reviews/product/3").then()
                 .extract()
                 .body()
                 .path("size()");
@@ -68,27 +57,27 @@ public class ReviewResourceTest {
 
         given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post(PREFIX + "/reviews/product/3")
+                .post("/reviews/product/3")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("id"))
                 .body(containsString("Wonderful laptop !"));
 
-        get(PREFIX + "/reviews/product/3").then()
+        get("/reviews/product/3").then()
                 .body("size()", is(count + 1));
     }
 
     @Test
     void testDelete() {
-        Integer count = get(PREFIX + "/reviews/product/2").then()
+        Integer count = get("/reviews/product/2").then()
                 .extract()
                 .body()
                 .path("size()");
 
-        delete(PREFIX + "/reviews/3").then()
+        delete("/reviews/3").then()
                 .statusCode(NO_CONTENT.getStatusCode());
 
-        get(PREFIX + "/reviews/product/2").then()
+        get("/reviews/product/2").then()
                 .body("size()", is(count - 1));
     }
 
@@ -104,7 +93,7 @@ public class ReviewResourceTest {
 
         var response = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post(PREFIX + "/products")
+                .post("/products")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
@@ -122,14 +111,14 @@ public class ReviewResourceTest {
 
         given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post(PREFIX + "/reviews/product/" + newProductID)
+                .post("/reviews/product/" + newProductID)
                 .then()
                 .statusCode(OK.getStatusCode());
 
-        delete(PREFIX + "/products/" + newProductID).then()
+        delete("/products/" + newProductID).then()
                 .statusCode(NO_CONTENT.getStatusCode());
 
-        get(PREFIX + "/reviews/product/" + newProductID).then()
+        get("/reviews/product/" + newProductID).then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", is(0));
     }

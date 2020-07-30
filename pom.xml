@@ -25,8 +25,6 @@
         <surefire-plugin.version>2.22.1</surefire-plugin.version>
         <testcontainers.version>1.14.3</testcontainers.version>
         <jacoco.version>0.8.5</jacoco.version>
-        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml
-        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -142,6 +140,7 @@
                 <configuration>
                     <systemProperties>
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                        <maven.home>${maven.home}</maven.home>
                     </systemProperties>
                 </configuration>
             </plugin>
@@ -201,6 +200,9 @@
                                         <native.image.path>
                                             ${project.build.directory}/${project.build.finalName}-runner
                                         </native.image.path>
+                                        <java.util.logging.manager>org.jboss.logmanager.LogManager
+                                        </java.util.logging.manager>
+                                        <maven.home>${maven.home}</maven.home>
                                     </systemProperties>
                                 </configuration>
                             </execution>

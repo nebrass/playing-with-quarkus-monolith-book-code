@@ -18,7 +18,6 @@ import static io.restassured.RestAssured.delete;
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.post;
-import static io.restassured.RestAssured.when;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
@@ -30,7 +29,7 @@ import static org.hamcrest.Matchers.greaterThan;
 @DisabledOnNativeImage
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-public class CartResourceTest {
+class CartResourceTest {
 
     private static final String INSERT_WRONG_CART_IN_DB =
             "insert into carts values (9999, current_timestamp, current_timestamp, 'NEW', 3)";

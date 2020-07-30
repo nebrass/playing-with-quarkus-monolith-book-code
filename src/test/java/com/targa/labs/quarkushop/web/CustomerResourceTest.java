@@ -1,10 +1,8 @@
 package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.utils.TestContainerResource;
-import io.quarkus.runtime.configuration.ProfileManager;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -25,18 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @QuarkusTestResource(TestContainerResource.class)
 class CustomerResourceTest {
 
-    private static String PREFIX = "";
-
-    @BeforeAll
-    static void init() {
-        if ("prod".equalsIgnoreCase(ProfileManager.getActiveProfile())) {
-            PREFIX = "/api";
-        }
-    }
-
     @Test
     void testAll() {
-        get(PREFIX + "/customers").then()
+        get("/customers").then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", greaterThanOrEqualTo(3))
                 .body(containsString("jason.bourne@mail.hello"))
@@ -46,7 +35,7 @@ class CustomerResourceTest {
 
     @Test
     void testAllActiveUsers() {
-        get(PREFIX + "/customers/active").then()
+        get("/customers/active").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("Simpson"))
                 .body(containsString("Homer"));
@@ -54,14 +43,14 @@ class CustomerResourceTest {
 
     @Test
     void testAllInactiveUsers() {
-        get(PREFIX + "/customers/inactive").then()
+        get("/customers/inactive").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("peter.quinn@mail.hello"));
     }
 
     @Test
     void testFindById() {
-        get(PREFIX + "/customers/1").then()
+        get("/customers/1").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("Jason"))
                 .body(containsString("Bourne"));
@@ -75,7 +64,7 @@ class CustomerResourceTest {
         requestParams.put("email", "call.saul@mail.com");
 
         var newCustomerId = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .body(requestParams).post(PREFIX + "/customers").then()
+                .body(requestParams).post("/customers").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
@@ -83,37 +72,37 @@ class CustomerResourceTest {
 
         assertNotNull(newCustomerId);
 
-        get(PREFIX + "/customers/" + newCustomerId).then()
+        get("/customers/" + newCustomerId).then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("Saul"))
                 .body(containsString("Berenson"))
                 .body(containsString("call.saul@mail.com"));
 
-        delete(PREFIX + "/customers/" + newCustomerId).then()
+        delete("/customers/" + newCustomerId).then()
                 .statusCode(NO_CONTENT.getStatusCode());
     }
 
     @Test
     void testDeleteThenCustomerIsDisabled() {
-        var initialActiveCount = get(PREFIX + "/customers/active").then()
+        var initialActiveCount = get("/customers/active").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
                 .getInt("size()");
 
-        var initialInactiveCount = get(PREFIX + "/customers/inactive").then()
+        var initialInactiveCount = get("/customers/inactive").then()
                 .statusCode(OK.getStatusCode())
                 .extract().jsonPath()
                 .getInt("size()");
 
-        delete(PREFIX + "/customers/1").then()
+        delete("/customers/1").then()
                 .statusCode(NO_CONTENT.getStatusCode());
 
-        get(PREFIX + "/customers/active").then()
+        get("/customers/active").then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", is(initialActiveCount - 1));
 
-        get(PREFIX + "/customers/inactive").then()
+        get("/customers/inactive").then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", is(initialInactiveCount + 1))
                 .body(containsString("Jason"))
