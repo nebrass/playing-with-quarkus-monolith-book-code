@@ -32,10 +32,11 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public ProductDto findById(Long id) {
         log.debug("Request to get Product : {}", id);
-        return this.productRepository.findById(id).map(ProductService::mapToDto).orElse(null);
+        return this.productRepository.findById(id)
+                .map(ProductService::mapToDto)
+                .orElse(null);
     }
 
     public ProductDto create(ProductDto productDto) {

@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * @author Nebrass Lamouchi
  */
-@ApplicationScoped
+
 @Path("/payments")
 @Produces(MediaType.APPLICATION_JSON)
 public class PaymentResource {

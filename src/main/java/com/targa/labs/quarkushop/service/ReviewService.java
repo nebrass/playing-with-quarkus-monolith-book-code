@@ -1,6 +1,5 @@
 package com.targa.labs.quarkushop.service;
 
-import com.targa.labs.quarkushop.domain.Product;
 import com.targa.labs.quarkushop.domain.Review;
 import com.targa.labs.quarkushop.repository.ProductRepository;
 import com.targa.labs.quarkushop.repository.ReviewRepository;
@@ -31,19 +30,20 @@ public class ReviewService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public ReviewDto findById(Long id) {
         log.debug("Request to get Review : {}", id);
-        return this.reviewRepository.findById(id).map(ReviewService::mapToDto).orElse(null);
+        return this.reviewRepository.findById(id)
+                .map(ReviewService::mapToDto)
+                .orElse(null);
     }
 
     public ReviewDto create(ReviewDto reviewDto, Long productId) {
         log.debug("Request to create Review : {} ofr the Product {}", reviewDto, productId);
 
-        Product product = this.productRepository.findById(productId)
+        var product = this.productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalStateException("Product with ID:" + productId + " was not found !"));
 
-        Review savedReview = this.reviewRepository.saveAndFlush(
+        var savedReview = this.reviewRepository.saveAndFlush(
                 new Review(
                         reviewDto.getTitle(),
                         reviewDto.getDescription(),
@@ -60,10 +60,10 @@ public class ReviewService {
     public void delete(Long reviewId) {
         log.debug("Request to delete Review : {}", reviewId);
 
-        Review review = this.reviewRepository.findById(reviewId)
+        var review = this.reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalStateException("Product with ID:" + reviewId + " was not found !"));
 
-        Product product = this.productRepository.findProductByReviewId(reviewId);
+        var product = this.productRepository.findProductByReviewId(reviewId);
 
         product.getReviews().remove(review);
 

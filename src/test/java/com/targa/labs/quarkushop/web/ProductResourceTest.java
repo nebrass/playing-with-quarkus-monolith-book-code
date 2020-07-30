@@ -1,19 +1,19 @@
 package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.utils.TestContainerResource;
+import io.quarkus.runtime.configuration.ProfileManager;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.Assert;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
+import static io.restassured.RestAssured.delete;
+import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,14 +21,24 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-class ProductResourceTest {
+public class ProductResourceTest {
+
+    private static String PREFIX = "";
+
+    @BeforeAll
+    static void init() {
+        if ("prod".equalsIgnoreCase(ProfileManager.getActiveProfile())) {
+            PREFIX = "/api";
+        }
+    }
 
     @Test
     void testFindAll() {
-        when().get("/products").then()
+        get(PREFIX + "/products").then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", greaterThan(0))
                 .body(containsString("name"))
@@ -39,7 +49,7 @@ class ProductResourceTest {
 
     @Test
     void testFindById() {
-        when().get("/products/3").then()
+        get(PREFIX + "/products/3").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("MacBook Pro 13"))
                 .body(containsString("1999.00"))
@@ -49,12 +59,12 @@ class ProductResourceTest {
 
     @Test
     void testCreate() {
-        Long count = when().get("/products/count").then()
+        var count = get(PREFIX + "/products/count").then()
                 .extract()
                 .body()
                 .as(Long.class);
 
-        Map<String, Object> requestParams = new HashMap<>();
+        var requestParams = new HashMap<>();
         requestParams.put("name", "Dell G5");
         requestParams.put("description", "Best gaming laptop from Dell");
         requestParams.put("price", 1490);
@@ -64,19 +74,19 @@ class ProductResourceTest {
 
         given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post("/products")
+                .post(PREFIX + "/products")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("id"))
                 .body(containsString("Dell G5"));
 
-        when().get("/products/count").then()
+        get(PREFIX + "/products/count").then()
                 .body(containsString(String.valueOf(count + 1)));
     }
 
     @Test
     void testDelete() {
-        Map<String, Object> requestParams = new HashMap<>();
+        var requestParams = new HashMap<>();
         requestParams.put("name", "Dell G5");
         requestParams.put("description", "Best gaming laptop from Dell");
         requestParams.put("price", 1490);
@@ -84,30 +94,30 @@ class ProductResourceTest {
         requestParams.put("salesCounter", 0);
         requestParams.put("categoryId", 2);
 
-        Map<String, Object> response = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        var response = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post("/products")
+                .post(PREFIX + "/products")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
                 .getMap("$");
 
-        Assert.assertNotNull(response.get("id"));
+        assertNotNull(response.get("id"));
 
-        Integer newProductID = (Integer) response.get("id");
+        var newProductID = (Integer) response.get("id");
 
-        given().delete("/products/" + newProductID).then()
+        delete(PREFIX + "/products/" + newProductID).then()
                 .statusCode(NO_CONTENT.getStatusCode());
 
-        given().get("/products/" + newProductID).then()
+        get(PREFIX + "/products/" + newProductID).then()
                 .statusCode(NO_CONTENT.getStatusCode())
                 .body(is(emptyString()));
     }
 
     @Test
     void testFindByCategoryId() {
-        List<Long> ids = when().get("/products/category/1").then()
+        var ids = get(PREFIX + "/products/category/1").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
@@ -118,7 +128,7 @@ class ProductResourceTest {
 
     @Test
     void testCountByCategoryId() {
-        Integer count = when().get("/products/count/category/1").then()
+        var count = get(PREFIX + "/products/count/category/1").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .as(Integer.class);

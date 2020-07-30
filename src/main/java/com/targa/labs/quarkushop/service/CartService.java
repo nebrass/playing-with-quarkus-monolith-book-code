@@ -44,10 +44,10 @@ public class CartService {
 
     public Cart create(Long customerId) {
         if (this.getActiveCart(customerId) == null) {
-            Customer customer = this.customerRepository.findById(customerId)
+            var customer = this.customerRepository.findById(customerId)
                     .orElseThrow(() -> new IllegalStateException("The Customer does not exist!"));
 
-            Cart cart = new Cart(
+            var cart = new Cart(
                     customer,
                     CartStatus.NEW
             );
@@ -62,7 +62,6 @@ public class CartService {
         return mapToDto(this.create(customerId));
     }
 
-    @Transactional(SUPPORTS)
     public CartDto findById(Long id) {
         log.debug("Request to get Cart : {}", id);
         return this.cartRepository.findById(id).map(CartService::mapToDto).orElse(null);
@@ -70,7 +69,7 @@ public class CartService {
 
     public void delete(Long id) {
         log.debug("Request to delete Cart : {}", id);
-        Cart cart = this.cartRepository.findById(id)
+        var cart = this.cartRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Cannot find cart with id " + id));
 
         cart.setStatus(CartStatus.CANCELED);
@@ -79,7 +78,7 @@ public class CartService {
     }
 
     public CartDto getActiveCart(Long customerId) {
-        List<Cart> carts = this.cartRepository
+        var carts = this.cartRepository
                 .findByStatusAndCustomerId(CartStatus.NEW, customerId);
         if (carts != null) {
 

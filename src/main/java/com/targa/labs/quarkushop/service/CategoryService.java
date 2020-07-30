@@ -31,7 +31,6 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public CategoryDto findById(Long id) {
         log.debug("Request to get Category : {}", id);
         return this.categoryRepository.findById(id)

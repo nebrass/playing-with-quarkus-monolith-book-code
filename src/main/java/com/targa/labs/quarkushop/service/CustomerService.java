@@ -44,7 +44,6 @@ public class CustomerService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public CustomerDto findById(Long id) {
         log.debug("Request to get Customer : {}", id);
         return this.customerRepository.findById(id).map(CustomerService::mapToDto).orElse(null);
@@ -69,7 +68,7 @@ public class CustomerService {
     public void delete(Long id) {
         log.debug("Request to delete Customer : {}", id);
 
-        Customer customer = this.customerRepository.findById(id)
+        var customer = this.customerRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Cannot find Customer with id " + id));
 
         customer.setEnabled(false);

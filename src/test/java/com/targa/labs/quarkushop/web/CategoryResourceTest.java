@@ -1,29 +1,41 @@
 package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.utils.TestContainerResource;
+import io.quarkus.runtime.configuration.ProfileManager;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.Assert;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
-import java.util.Map;
 
+import static io.restassured.RestAssured.delete;
+import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-class CategoryResourceTest {
+public class CategoryResourceTest {
+
+    private static String PREFIX = "";
+
+    @BeforeAll
+    static void init() {
+        if ("prod".equalsIgnoreCase(ProfileManager.getActiveProfile())) {
+            PREFIX = "/api";
+        }
+    }
+
     @Test
     void testFindAll() {
-        when().get("/categories").then()
+        get(PREFIX + "/categories").then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", is(2))
                 .body(containsString("Phones & Smartphones"))
@@ -34,7 +46,7 @@ class CategoryResourceTest {
 
     @Test
     void testFindById() {
-        when().get("/categories/1").then()
+        get(PREFIX + "/categories/1").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("Phones & Smartphones"))
                 .body(containsString("Mobile"));
@@ -42,7 +54,7 @@ class CategoryResourceTest {
 
     @Test
     void testFindProductsByCategoryId() {
-        when().get("/categories/1/products").then()
+        get(PREFIX + "/categories/1/products").then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("categoryId"))
                 .body(containsString("description"))
@@ -56,60 +68,60 @@ class CategoryResourceTest {
 
     @Test
     void testCreate() {
-        Map<String, String> requestParams = new HashMap<>();
+        var requestParams = new HashMap<>();
         requestParams.put("name", "Cars");
         requestParams.put("description", "New and used cars");
 
-        Map<String, Object> response = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        var response = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post("/categories")
+                .post(PREFIX + "/categories")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
                 .getMap("$");
 
-        Assert.assertNotNull(response.get("id"));
+        assertNotNull(response.get("id"));
 
-        Integer newProductID = (Integer) response.get("id");
+        var newProductID = (Integer) response.get("id");
 
-        when().get("/categories/" + newProductID).then()
+        get(PREFIX + "/categories/" + newProductID).then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("Cars"))
                 .body(containsString("New and used cars"));
 
-        when().delete("/categories/" + newProductID).then()
+        delete(PREFIX + "/categories/" + newProductID).then()
                 .statusCode(NO_CONTENT.getStatusCode());
     }
 
     @Test
     void testDelete() {
-        Map<String, String> requestParams = new HashMap<>();
+        var requestParams = new HashMap<>();
         requestParams.put("name", "Home");
         requestParams.put("description", "New and old homes");
 
-        Map<String, Object> response = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        var response = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post("/categories")
+                .post(PREFIX + "/categories")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
                 .getMap("$");
 
-        Assert.assertNotNull(response.get("id"));
+        assertNotNull(response.get("id"));
 
-        Integer newProductID = (Integer) response.get("id");
+        var newProductID = (Integer) response.get("id");
 
-        when().get("/categories/" + newProductID).then()
+        get(PREFIX + "/categories/" + newProductID).then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("Home"))
                 .body(containsString("New and old homes"));
 
-        when().delete("/categories/" + newProductID).then()
+        delete(PREFIX + "/categories/" + newProductID).then()
                 .statusCode(NO_CONTENT.getStatusCode());
 
-        when().get("/categories/" + newProductID).then()
+        get(PREFIX + "/categories/" + newProductID).then()
                 .statusCode(NO_CONTENT.getStatusCode());
     }
 }

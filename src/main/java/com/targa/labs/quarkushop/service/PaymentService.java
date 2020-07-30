@@ -44,7 +44,7 @@ public class PaymentService {
 
     public PaymentDto findById(Long id) {
         log.debug("Request to get Payment : {}", id);
-        Order order = findOrderByPaymentId(id);
+        var order = findOrderByPaymentId(id);
 
         return this.paymentRepository
                 .findById(id)
@@ -55,14 +55,14 @@ public class PaymentService {
     public PaymentDto create(PaymentDto paymentDto) {
         log.debug("Request to create Payment : {}", paymentDto);
 
-        Order order =
+        var order =
                 this.orderRepository
                         .findById(paymentDto.getOrderId())
                         .orElseThrow(() -> new IllegalStateException("The Order does not exist!"));
 
         order.setStatus(OrderStatus.PAID);
 
-        Payment payment = this.paymentRepository.saveAndFlush(new Payment(
+        var payment = this.paymentRepository.saveAndFlush(new Payment(
                 paymentDto.getPaypalPaymentId(),
                 PaymentStatus.valueOf(paymentDto.getStatus()),
                 order.getPrice()

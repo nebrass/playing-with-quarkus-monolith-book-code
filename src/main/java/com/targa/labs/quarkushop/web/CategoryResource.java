@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author Nebrass Lamouchi
  */
-@ApplicationScoped
+
 @Path("/categories")
 @Produces(MediaType.APPLICATION_JSON)
 public class CategoryResource {

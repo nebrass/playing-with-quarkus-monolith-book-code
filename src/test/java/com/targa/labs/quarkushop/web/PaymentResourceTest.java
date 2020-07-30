@@ -2,18 +2,19 @@ package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.domain.enumeration.PaymentStatus;
 import com.targa.labs.quarkushop.utils.TestContainerResource;
+import io.quarkus.runtime.configuration.ProfileManager;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
+import static io.restassured.RestAssured.delete;
+import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
 import static javax.ws.rs.core.Response.Status.ACCEPTED;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
@@ -25,11 +26,20 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
-class PaymentResourceTest {
+public class PaymentResourceTest {
+
+    private static String PREFIX = "";
+
+    @BeforeAll
+    static void init() {
+        if ("prod".equalsIgnoreCase(ProfileManager.getActiveProfile())) {
+            PREFIX = "/api";
+        }
+    }
 
     @Test
     void testFindAll() {
-        List<Object> payments = when().get("/payments").then()
+        var payments = get(PREFIX + "/payments").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
@@ -40,7 +50,7 @@ class PaymentResourceTest {
 
     @Test
     void testFindById() {
-        Map<String, Object> response = when().get("/payments/2").then()
+        var response = get(PREFIX + "/payments/2").then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
@@ -54,22 +64,22 @@ class PaymentResourceTest {
 
     @Test
     void testCreate() {
-        Map<String, Object> requestParams = new HashMap<>();
+        var requestParams = new HashMap<>();
 
         requestParams.put("orderId", 3);
         requestParams.put("paypalPaymentId", "anotherPaymentId");
         requestParams.put("status", PaymentStatus.PENDING);
 
-        Map<String, Object> response = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        var response = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post("/payments")
+                .post(PREFIX + "/payments")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
                 .getMap("$");
 
-        Integer createdPaymentId = (Integer) response.get("id");
+        var createdPaymentId = (Integer) response.get("id");
         assertThat(createdPaymentId).isGreaterThanOrEqualTo(1);
         assertThat(response.get("orderId")).isEqualTo(3);
         assertThat(response.get("paypalPaymentId")).isEqualTo("anotherPaymentId");
@@ -78,28 +88,28 @@ class PaymentResourceTest {
 
     @Test
     void testDelete() {
-        Map<String, Object> requestParams = new HashMap<>();
+        var requestParams = new HashMap<>();
 
         requestParams.put("orderId", 3);
         requestParams.put("paypalPaymentId", "anotherPaymentId");
         requestParams.put("status", PaymentStatus.PENDING);
 
-        Long createdPaymentId = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        var createdPaymentId = given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
-                .post("/payments")
+                .post(PREFIX + "/payments")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
                 .getLong("id");
 
-        when().delete("/payments/" + createdPaymentId).then()
+        delete(PREFIX + "/payments/" + createdPaymentId).then()
                 .statusCode(NO_CONTENT.getStatusCode());
     }
 
     @Test
     void testFindByRangeMax() {
-        when().get("/payments/price/800").then()
+        get(PREFIX + "/payments/price/800").then()
                 .statusCode(OK.getStatusCode())
                 .body("size()", is(1))
                 .body(containsString("orderId"))
