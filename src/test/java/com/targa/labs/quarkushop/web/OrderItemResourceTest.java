@@ -45,7 +45,7 @@ class OrderItemResourceTest {
         requestParams.put("productId", 3);
         requestParams.put("orderId", 3);
 
-        assertThat(totalPrice).isEqualTo(0);
+        assertThat(totalPrice).isZero();
 
         given().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(requestParams)
@@ -81,6 +81,6 @@ class OrderItemResourceTest {
                 .jsonPath()
                 .getDouble("totalPrice");
 
-        assertThat(totalPrice).isEqualTo(0);
+        assertThat(totalPrice).isZero();
     }
 }

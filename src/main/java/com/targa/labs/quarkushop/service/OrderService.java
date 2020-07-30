@@ -1,7 +1,7 @@
 package com.targa.labs.quarkushop.service;
 
 import com.targa.labs.quarkushop.domain.Order;
-import com.targa.labs.quarkushop.domain.enumeration.OrderStatus;
+import com.targa.labs.quarkushop.domain.enums.OrderStatus;
 import com.targa.labs.quarkushop.repository.CartRepository;
 import com.targa.labs.quarkushop.repository.OrderRepository;
 import com.targa.labs.quarkushop.repository.PaymentRepository;
@@ -28,6 +28,25 @@ public class OrderService {
     PaymentRepository paymentRepository;
     @Inject
     CartRepository cartRepository;
+
+    public static OrderDto mapToDto(Order order) {
+        var orderItems = order
+                .getOrderItems()
+                .stream()
+                .map(OrderItemService::mapToDto)
+                .collect(Collectors.toSet());
+
+        return new OrderDto(
+                order.getId(),
+                order.getPrice(),
+                order.getStatus().name(),
+                order.getShipped(),
+                order.getPayment() != null ? order.getPayment().getId() : null,
+                AddressService.mapToDto(order.getShipmentAddress()),
+                orderItems,
+                CartService.mapToDto(order.getCart())
+        );
+    }
 
     public List<OrderDto> findAll() {
         log.debug("Request to get all Orders");
@@ -87,24 +106,5 @@ public class OrderService {
 
     public boolean existsById(Long id) {
         return this.orderRepository.existsById(id);
-    }
-
-    public static OrderDto mapToDto(Order order) {
-        var orderItems = order
-                .getOrderItems()
-                .stream()
-                .map(OrderItemService::mapToDto)
-                .collect(Collectors.toSet());
-
-        return new OrderDto(
-                order.getId(),
-                order.getPrice(),
-                order.getStatus().name(),
-                order.getShipped(),
-                order.getPayment() != null ? order.getPayment().getId() : null,
-                AddressService.mapToDto(order.getShipmentAddress()),
-                orderItems,
-                CartService.mapToDto(order.getCart())
-        );
     }
 }

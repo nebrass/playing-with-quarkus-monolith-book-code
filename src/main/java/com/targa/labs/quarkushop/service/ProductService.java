@@ -1,7 +1,7 @@
 package com.targa.labs.quarkushop.service;
 
 import com.targa.labs.quarkushop.domain.Product;
-import com.targa.labs.quarkushop.domain.enumeration.ProductStatus;
+import com.targa.labs.quarkushop.domain.enums.ProductStatus;
 import com.targa.labs.quarkushop.repository.CategoryRepository;
 import com.targa.labs.quarkushop.repository.ProductRepository;
 import com.targa.labs.quarkushop.web.dto.ProductDto;
@@ -23,6 +23,19 @@ public class ProductService {
     ProductRepository productRepository;
     @Inject
     CategoryRepository categoryRepository;
+
+    public static ProductDto mapToDto(Product product) {
+        return new ProductDto(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStatus().name(),
+                product.getSalesCounter(),
+                product.getReviews().stream().map(ReviewService::mapToDto).collect(Collectors.toSet()),
+                product.getCategory().getId()
+        );
+    }
 
     public List<ProductDto> findAll() {
         log.debug("Request to get all Products");
@@ -71,18 +84,5 @@ public class ProductService {
 
     public Long countByCategoryId(Long id) {
         return this.productRepository.countAllByCategoryId(id);
-    }
-
-    public static ProductDto mapToDto(Product product) {
-        return new ProductDto(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                product.getStatus().name(),
-                product.getSalesCounter(),
-                product.getReviews().stream().map(ReviewService::mapToDto).collect(Collectors.toSet()),
-                product.getCategory().getId()
-        );
     }
 }

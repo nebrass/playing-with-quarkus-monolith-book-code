@@ -1,7 +1,7 @@
 package com.targa.labs.quarkushop.web;
 
-import com.targa.labs.quarkushop.domain.enumeration.CartStatus;
-import com.targa.labs.quarkushop.domain.enumeration.OrderStatus;
+import com.targa.labs.quarkushop.domain.enums.CartStatus;
+import com.targa.labs.quarkushop.domain.enums.OrderStatus;
 import com.targa.labs.quarkushop.utils.TestContainerResource;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
@@ -103,17 +103,17 @@ class OrderResourceTest {
         var newOrderId = (Integer) orderResponse.get("id");
         assertThat(newOrderId).isNotNull();
 
-        assertThat(orderResponse.get("status")).isEqualTo(OrderStatus.CREATION.name());
-        assertThat(orderResponse.get("totalPrice")).isEqualTo(0);
+        assertThat(orderResponse).containsEntry("status", OrderStatus.CREATION.name());
+        assertThat((Integer) orderResponse.get("totalPrice")).isZero();
 
-        var cartResponse = (Map) orderResponse.get("cart");
+        var cartResponse = (Map<String, Object>) orderResponse.get("cart");
         assertThat(cartResponse.get("id")).isNotNull();
-        assertThat(cartResponse.get("status")).isEqualTo(CartStatus.NEW.name());
+        assertThat(cartResponse).containsEntry("status", CartStatus.NEW.name());
 
-        var customerResponse = (Map) cartResponse.get("customer");
-        assertThat(customerResponse.get("email")).isEqualTo("call.saul@mail.com");
-        assertThat(customerResponse.get("firstName")).isEqualTo("Saul");
-        assertThat(customerResponse.get("lastName")).isEqualTo("Berenson");
+        var customerResponse = (Map<String, Object>) cartResponse.get("customer");
+        assertThat(customerResponse).containsEntry("email", "call.saul@mail.com")
+                .containsEntry("firstName", "Saul")
+                .containsEntry("lastName", "Berenson");
 
         delete("/orders/" + newOrderId).then()
                 .statusCode(NO_CONTENT.getStatusCode());

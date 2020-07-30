@@ -1,8 +1,7 @@
 package com.targa.labs.quarkushop.service;
 
 import com.targa.labs.quarkushop.domain.Cart;
-import com.targa.labs.quarkushop.domain.Customer;
-import com.targa.labs.quarkushop.domain.enumeration.CartStatus;
+import com.targa.labs.quarkushop.domain.enums.CartStatus;
 import com.targa.labs.quarkushop.repository.CartRepository;
 import com.targa.labs.quarkushop.repository.CustomerRepository;
 import com.targa.labs.quarkushop.web.dto.CartDto;
@@ -14,8 +13,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static javax.transaction.Transactional.TxType.SUPPORTS;
-
 @Slf4j
 @ApplicationScoped
 @Transactional
@@ -26,6 +23,14 @@ public class CartService {
 
     @Inject
     CustomerRepository customerRepository;
+
+    public static CartDto mapToDto(Cart cart) {
+        return new CartDto(
+                cart.getId(),
+                CustomerService.mapToDto(cart.getCustomer()),
+                cart.getStatus().name()
+        );
+    }
 
     public List<CartDto> findAll() {
         log.debug("Request to get all Carts");
@@ -91,13 +96,5 @@ public class CartService {
         }
 
         return null;
-    }
-
-    public static CartDto mapToDto(Cart cart) {
-        return new CartDto(
-                cart.getId(),
-                CustomerService.mapToDto(cart.getCustomer()),
-                cart.getStatus().name()
-        );
     }
 }

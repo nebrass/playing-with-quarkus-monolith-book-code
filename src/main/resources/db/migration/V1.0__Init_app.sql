@@ -69,13 +69,12 @@ alter table "orders"
 
 create table "payments"
 (
-    "id"                 bigint       not null,
-    "created_date"       timestamp    not null,
+    "id"                 bigint         not null,
+    "created_date"       timestamp      not null,
     "last_modified_date" timestamp,
     "paypal_payment_id"  varchar(255),
-    "status"             varchar(255) not null,
-    "amount"        decimal(10, 2) not null,
-    "order_id"           bigint
+    "status"             varchar(255)   not null,
+    "amount"             decimal(10, 2) not null
 );
 alter table "payments"
     add constraint "payment_pk" primary key ("id");
@@ -117,8 +116,6 @@ alter table "reviews"
 
 alter table "products_reviews"
     add constraint "products_reviews_uk" unique ("reviews_id");
-alter table "payments"
-    add constraint "payment_uk" unique ("order_id");
 alter table "orders"
     add constraint "orders_uk" unique ("payment_id");
 alter table "products_reviews"
@@ -127,8 +124,6 @@ alter table "carts"
     add constraint "cart_fk" foreign key ("customer_id") references "customers" ("id");
 alter table "order_items"
     add constraint "order_item_fk1" foreign key ("product_id") references "products" ("id");
-alter table "payments"
-    add constraint "payments_fk" foreign key ("order_id") references "orders" ("id");
 alter table "orders"
     add constraint "orders_fk1" foreign key ("payment_id") references "payments" ("id");
 alter table "order_items"

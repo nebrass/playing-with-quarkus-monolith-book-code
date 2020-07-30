@@ -23,6 +23,15 @@ public class CategoryService {
     @Inject
     ProductRepository productRepository;
 
+    public static CategoryDto mapToDto(Category category, Long productsCount) {
+        return new CategoryDto(
+                category.getId(),
+                category.getName(),
+                category.getDescription(),
+                productsCount
+        );
+    }
+
     public List<CategoryDto> findAll() {
         log.debug("Request to get all Categories");
         return this.categoryRepository.findAll()
@@ -57,14 +66,5 @@ public class CategoryService {
                 .stream()
                 .map(ProductService::mapToDto)
                 .collect(Collectors.toList());
-    }
-
-    public static CategoryDto mapToDto(Category category, Long productsCount) {
-        return new CategoryDto(
-                category.getId(),
-                category.getName(),
-                category.getDescription(),
-                productsCount
-        );
     }
 }

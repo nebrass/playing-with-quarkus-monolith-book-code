@@ -1,6 +1,6 @@
 package com.targa.labs.quarkushop.web;
 
-import com.targa.labs.quarkushop.domain.enumeration.PaymentStatus;
+import com.targa.labs.quarkushop.domain.enums.PaymentStatus;
 import com.targa.labs.quarkushop.utils.TestContainerResource;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
@@ -45,10 +45,10 @@ class PaymentResourceTest {
                 .jsonPath()
                 .getMap("$");
 
-        assertEquals(response.get("id"), 2);
-        assertEquals(response.get("status"), ACCEPTED.name());
-        assertEquals(response.get("paypalPaymentId"), "paymentId");
-        assertEquals(response.get("orderId"), 1);
+        assertEquals(2, response.get("id"));
+        assertEquals(ACCEPTED.name(), response.get("status"));
+        assertEquals("paymentId", response.get("paypalPaymentId"));
+        assertEquals(1, response.get("orderId"));
     }
 
     @Test
@@ -69,10 +69,10 @@ class PaymentResourceTest {
                 .getMap("$");
 
         var createdPaymentId = (Integer) response.get("id");
-        assertThat(createdPaymentId).isGreaterThanOrEqualTo(1);
-        assertThat(response.get("orderId")).isEqualTo(3);
-        assertThat(response.get("paypalPaymentId")).isEqualTo("anotherPaymentId");
-        assertThat(response.get("status")).isEqualTo(PaymentStatus.PENDING.name());
+        assertThat(createdPaymentId).isNotZero();
+        assertThat(response).containsEntry("orderId", 3)
+                .containsEntry("paypalPaymentId", "anotherPaymentId")
+                .containsEntry("status", PaymentStatus.PENDING.name());
     }
 
     @Test

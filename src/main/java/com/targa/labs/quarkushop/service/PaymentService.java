@@ -2,8 +2,8 @@ package com.targa.labs.quarkushop.service;
 
 import com.targa.labs.quarkushop.domain.Order;
 import com.targa.labs.quarkushop.domain.Payment;
-import com.targa.labs.quarkushop.domain.enumeration.OrderStatus;
-import com.targa.labs.quarkushop.domain.enumeration.PaymentStatus;
+import com.targa.labs.quarkushop.domain.enums.OrderStatus;
+import com.targa.labs.quarkushop.domain.enums.PaymentStatus;
 import com.targa.labs.quarkushop.repository.OrderRepository;
 import com.targa.labs.quarkushop.repository.PaymentRepository;
 import com.targa.labs.quarkushop.web.dto.PaymentDto;
@@ -25,6 +25,18 @@ public class PaymentService {
     PaymentRepository paymentRepository;
     @Inject
     OrderRepository orderRepository;
+
+    public static PaymentDto mapToDto(Payment payment, Long orderId) {
+        if (payment != null) {
+            return new PaymentDto(
+                    payment.getId(),
+                    payment.getPaypalPaymentId(),
+                    payment.getStatus().name(),
+                    orderId
+            );
+        }
+        return null;
+    }
 
     public List<PaymentDto> findByPriceRange(Double max) {
         return this.paymentRepository
@@ -73,7 +85,6 @@ public class PaymentService {
         return mapToDto(payment, order.getId());
     }
 
-
     private Order findOrderByPaymentId(Long id) {
         return this.orderRepository.findByPaymentId(id)
                 .orElseThrow(() -> new IllegalStateException("No Order exists for the Payment ID " + id));
@@ -82,17 +93,5 @@ public class PaymentService {
     public void delete(Long id) {
         log.debug("Request to delete Payment : {}", id);
         this.paymentRepository.deleteById(id);
-    }
-
-    public static PaymentDto mapToDto(Payment payment, Long orderId) {
-        if (payment != null) {
-            return new PaymentDto(
-                    payment.getId(),
-                    payment.getPaypalPaymentId(),
-                    payment.getStatus().name(),
-                    orderId
-            );
-        }
-        return null;
     }
 }

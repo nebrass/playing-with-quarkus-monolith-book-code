@@ -1,8 +1,9 @@
 package com.targa.labs.quarkushop.domain;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Column;
@@ -10,15 +11,14 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
-import java.util.Objects;
 import java.util.Set;
 
 /**
  * A Customer.
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString(callSuper = true)
 @Entity
 @Table(name = "customers")
@@ -37,37 +37,10 @@ public class Customer extends AbstractEntity {
     @Column(name = "telephone")
     private String telephone;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "customer")
     private Set<Cart> carts;
 
     @Column(name = "enabled", nullable = false)
     private Boolean enabled;
-
-    public Customer(String firstName, String lastName, @Email String email,
-                    String telephone, Set<Cart> carts, Boolean enabled) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.telephone = telephone;
-        this.carts = carts;
-        this.enabled = enabled;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Customer customer = (Customer) o;
-        return Objects.equals(firstName, customer.firstName) &&
-                Objects.equals(lastName, customer.lastName) &&
-                Objects.equals(email, customer.email) &&
-                Objects.equals(telephone, customer.telephone) &&
-                Objects.equals(carts, customer.carts) &&
-                Objects.equals(enabled, customer.enabled);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(firstName, lastName, email, telephone, enabled);
-    }
 }

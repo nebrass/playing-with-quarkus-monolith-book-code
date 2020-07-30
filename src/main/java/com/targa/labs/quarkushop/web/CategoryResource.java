@@ -4,7 +4,6 @@ import com.targa.labs.quarkushop.service.CategoryService;
 import com.targa.labs.quarkushop.web.dto.CategoryDto;
 import com.targa.labs.quarkushop.web.dto.ProductDto;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;

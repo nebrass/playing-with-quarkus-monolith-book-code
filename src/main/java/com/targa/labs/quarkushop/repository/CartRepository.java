@@ -1,7 +1,7 @@
 package com.targa.labs.quarkushop.repository;
 
 import com.targa.labs.quarkushop.domain.Cart;
-import com.targa.labs.quarkushop.domain.enumeration.CartStatus;
+import com.targa.labs.quarkushop.domain.enums.CartStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -20,6 +20,16 @@ public class CustomerService {
     @Inject
     CustomerRepository customerRepository;
 
+    public static CustomerDto mapToDto(Customer customer) {
+        return new CustomerDto(
+                customer.getId(),
+                customer.getFirstName(),
+                customer.getLastName(),
+                customer.getEmail(),
+                customer.getTelephone()
+        );
+    }
+
     public CustomerDto create(CustomerDto customerDto) {
         log.debug("Request to create Customer : {}", customerDto);
         return mapToDto(
@@ -73,15 +83,5 @@ public class CustomerService {
 
         customer.setEnabled(false);
         this.customerRepository.save(customer);
-    }
-
-    public static CustomerDto mapToDto(Customer customer) {
-        return new CustomerDto(
-                customer.getId(),
-                customer.getFirstName(),
-                customer.getLastName(),
-                customer.getEmail(),
-                customer.getTelephone()
-        );
     }
 }

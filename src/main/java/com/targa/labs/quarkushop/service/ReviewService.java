@@ -22,6 +22,15 @@ public class ReviewService {
     @Inject
     ProductRepository productRepository;
 
+    public static ReviewDto mapToDto(Review review) {
+        return new ReviewDto(
+                review.getId(),
+                review.getTitle(),
+                review.getDescription(),
+                review.getRating()
+        );
+    }
+
     public List<ReviewDto> findReviewsByProductId(Long id) {
         log.debug("Request to get all Reviews");
         return this.reviewRepository.findReviewsByProductId(id)
@@ -69,14 +78,5 @@ public class ReviewService {
 
         this.productRepository.saveAndFlush(product);
         this.reviewRepository.delete(review);
-    }
-
-    public static ReviewDto mapToDto(Review review) {
-        return new ReviewDto(
-                review.getId(),
-                review.getTitle(),
-                review.getDescription(),
-                review.getRating()
-        );
     }
 }

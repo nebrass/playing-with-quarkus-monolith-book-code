@@ -2,10 +2,10 @@ package com.targa.labs.quarkushop.service;
 
 import com.targa.labs.quarkushop.domain.Address;
 import com.targa.labs.quarkushop.web.dto.AddressDto;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-import javax.enterprise.context.ApplicationScoped;
-
-@ApplicationScoped
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AddressService {
 
     public static Address createFromDto(AddressDto addressDto) {

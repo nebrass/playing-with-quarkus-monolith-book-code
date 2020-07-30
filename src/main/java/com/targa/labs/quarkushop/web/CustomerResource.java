@@ -3,7 +3,6 @@ package com.targa.labs.quarkushop.web;
 import com.targa.labs.quarkushop.service.CustomerService;
 import com.targa.labs.quarkushop.web.dto.CustomerDto;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;

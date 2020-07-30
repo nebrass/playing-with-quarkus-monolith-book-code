@@ -14,10 +14,10 @@ import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
@@ -70,7 +70,7 @@ class CustomerResourceTest {
                 .jsonPath()
                 .getInt("id");
 
-        assertNotNull(newCustomerId);
+        assertThat(newCustomerId).isNotZero();
 
         get("/customers/" + newCustomerId).then()
                 .statusCode(OK.getStatusCode())

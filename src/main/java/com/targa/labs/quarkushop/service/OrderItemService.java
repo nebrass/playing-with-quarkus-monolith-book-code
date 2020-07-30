@@ -1,8 +1,6 @@
 package com.targa.labs.quarkushop.service;
 
-import com.targa.labs.quarkushop.domain.Order;
 import com.targa.labs.quarkushop.domain.OrderItem;
-import com.targa.labs.quarkushop.domain.Product;
 import com.targa.labs.quarkushop.repository.OrderItemRepository;
 import com.targa.labs.quarkushop.repository.OrderRepository;
 import com.targa.labs.quarkushop.repository.ProductRepository;
@@ -26,6 +24,15 @@ public class OrderItemService {
     OrderRepository orderRepository;
     @Inject
     ProductRepository productRepository;
+
+    public static OrderItemDto mapToDto(OrderItem orderItem) {
+        return new OrderItemDto(
+                orderItem.getId(),
+                orderItem.getQuantity(),
+                orderItem.getProduct().getId(),
+                orderItem.getOrder().getId()
+        );
+    }
 
     public OrderItemDto findById(Long id) {
         log.debug("Request to get OrderItem : {}", id);
@@ -84,14 +91,5 @@ public class OrderItemService {
                 .stream()
                 .map(OrderItemService::mapToDto)
                 .collect(Collectors.toList());
-    }
-
-    public static OrderItemDto mapToDto(OrderItem orderItem) {
-        return new OrderItemDto(
-                orderItem.getId(),
-                orderItem.getQuantity(),
-                orderItem.getProduct().getId(),
-                orderItem.getOrder().getId()
-        );
     }
 }

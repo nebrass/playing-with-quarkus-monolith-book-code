@@ -1,4 +1,4 @@
-package com.targa.labs.quarkushop.domain.enumeration;
+package com.targa.labs.quarkushop.domain.enums;
 
 /**
  * The OrderStatus enumeration.

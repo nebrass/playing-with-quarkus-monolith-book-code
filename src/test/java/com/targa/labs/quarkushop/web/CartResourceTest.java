@@ -1,6 +1,6 @@
 package com.targa.labs.quarkushop.web;
 
-import com.targa.labs.quarkushop.domain.enumeration.CartStatus;
+import com.targa.labs.quarkushop.domain.enums.CartStatus;
 import com.targa.labs.quarkushop.utils.TestContainerResource;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.DisabledOnNativeImage;
@@ -139,7 +139,7 @@ class CartResourceTest {
                 .body(containsString(INTERNAL_SERVER_ERROR.getReasonPhrase()))
                 .body(containsString("There is already an active cart"));
 
-        assertThat(newCartId).isNotNull();
+        assertThat(newCartId).isNotZero();
 
         delete("/carts/" + newCartId).then()
                 .statusCode(NO_CONTENT.getStatusCode());

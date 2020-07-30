@@ -1,6 +1,7 @@
 package com.targa.labs.quarkushop.domain;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -8,13 +9,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
 /**
  * A Review.
  */
-@Getter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString(callSuper = true)
 @Entity
 @Table(name = "reviews")
@@ -31,25 +32,4 @@ public class Review extends AbstractEntity {
     @NotNull
     @Column(name = "rating", nullable = false)
     private Long rating;
-
-    public Review(@NotNull String title, @NotNull String description, @NotNull Long rating) {
-        this.title = title;
-        this.description = description;
-        this.rating = rating;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Review review = (Review) o;
-        return Objects.equals(title, review.title) &&
-                Objects.equals(description, review.description) &&
-                Objects.equals(rating, review.rating);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(title, description, rating);
-    }
 }
