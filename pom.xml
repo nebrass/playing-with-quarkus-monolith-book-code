@@ -26,10 +26,6 @@
         <testcontainers.version>1.14.3</testcontainers.version>
         <lombok.version>1.18.12</lombok.version>
         <jacoco.version>0.8.5</jacoco.version>
-
-        <sonar.projectKey>nebrass_playing-with-java-microservices-monolith-example</sonar.projectKey>
-        <sonar.organization>nebrass</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
     <dependencyManagement>
         <dependencies>
