@@ -1,5 +1,6 @@
-*
-!target/*-runner
-!target/*-runner.jar
-!target/lib/*
-!target/quarkus-app/*
+# TODO: remove comments if not using multistage builds
+# *
+# !target/*-runner
+# !target/*-runner.jar
+# !target/lib/*
+# !target/quarkus-app/*
