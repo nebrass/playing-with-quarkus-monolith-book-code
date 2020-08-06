@@ -8,7 +8,8 @@ import java.util.Map;
 
 public class TestContainerResource implements QuarkusTestResourceLifecycleManager {
 
-    private static final PostgreSQLContainer<?> DATABASE = new PostgreSQLContainer<>("postgres:9.6.12");
+    private static final PostgreSQLContainer<?> DATABASE =
+            new PostgreSQLContainer<>("postgres:9.6.12");
 
     @Override
     public Map<String, String> start() {
