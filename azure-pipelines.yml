@@ -11,7 +11,7 @@ pool:
 
 steps:
 - task: Maven@3
-  displayName: 'Verify & Sonar'
+  displayName: 'Maven verify & Sonar Analysis'
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -22,27 +22,21 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'verify sonar:sonar'
 
-- task: Maven@3
-  displayName: 'Package only'
+- task: Docker@2
+  displayName: 'Docker Multistage Build'
   inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: false
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package -DskipTests -DskipITs'
+    containerRegistry: 'nebrass@DockerHub'
+    repository: 'nebrass/quarkushop-monolithic-application'
+    command: 'build'
+    Dockerfile: '**/Dockerfile.multistage'
+    buildContext: '.'
+    tags: |
+      $(Build.BuildId)
+      latest
 
-- task: CopyFiles@2
-  displayName: 'CopyFiles for Target'
+- task: Docker@2
+  displayName: 'Push Image to DockerHub'
   inputs:
-    SourceFolder: 'target'
-    Contents: '*.jar'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: drop'
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: drop
+    containerRegistry: 'nebrass@DockerHub'
+    repository: 'nebrass/quarkushop-monolithic-application'
+    command: 'push'
