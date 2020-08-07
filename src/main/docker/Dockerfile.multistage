@@ -22,4 +22,4 @@ RUN chmod 775 /work /work/application \
 EXPOSE 8080
 USER 1001
 
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
+CMD echo "The application will start in 10s..." && sleep 10 && ./application -Dquarkus.http.host=0.0.0.0
