@@ -40,3 +40,6 @@ steps:
     containerRegistry: 'nebrass@DockerHub'
     repository: 'nebrass/quarkushop-monolithic-application'
     command: 'push'
+    tags: |
+      $(Build.BuildId)
+      latest
