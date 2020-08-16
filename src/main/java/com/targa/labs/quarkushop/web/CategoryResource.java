@@ -3,7 +3,9 @@ package com.targa.labs.quarkushop.web;
 import com.targa.labs.quarkushop.service.CategoryService;
 import com.targa.labs.quarkushop.web.dto.CategoryDto;
 import com.targa.labs.quarkushop.web.dto.ProductDto;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -21,6 +23,7 @@ import java.util.List;
 
 @Path("/categories")
 @Produces(MediaType.APPLICATION_JSON)
+@Tag(name = "category", description = "All the category methods")
 public class CategoryResource {
 
     @Inject
@@ -43,12 +46,14 @@ public class CategoryResource {
         return this.categoryService.findProductsByCategoryId(id);
     }
 
+    @RolesAllowed("admin")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public CategoryDto create(CategoryDto categoryDto) {
         return this.categoryService.create(categoryDto);
     }
 
+    @RolesAllowed("admin")
     @DELETE
     @Path("/{id}")
     public void delete(@PathParam("id") Long id) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,19 +18,17 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- TODO: Restore it to quarkus-universe-bom when 1.7.0.Final is released -->
         <quarkus-plugin.version>1.7.0.Final</quarkus-plugin.version>
-        <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+        <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
         <quarkus.platform.version>1.7.0.Final</quarkus.platform.version>
-        <surefire-plugin.version>2.22.2</surefire-plugin.version>
         <testcontainers.version>1.14.3</testcontainers.version>
         <lombok.version>1.18.12</lombok.version>
 
         <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
         <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.0.0-M4</maven-failsafe-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
 
         <sonar.projectKey>quarkushop-monolith</sonar.projectKey>
         <sonar.organization>nebrass</sonar.organization>
@@ -124,6 +122,11 @@
             <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- Security-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-jwt</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -155,7 +158,8 @@
                     <reportsDirectory>${junit.utReportFolder}</reportsDirectory>
                     <excludes>
                         <exclude>**/*IT*</exclude>
-                        <exclude>**/*IntTest*</exclude>
+                        <exclude>**/web/*</exclude>
+                        <exclude>**/security/*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -171,8 +175,7 @@
                     <runOrder>alphabetical</runOrder>
                     <reportsDirectory>${junit.itReportFolder}</reportsDirectory>
                     <includes>
-                        <include>**/*IT*</include>
-                        <include>**/*IntTest*</include>
+                        <include>**/web/*Test*</include>
                     </includes>
                 </configuration>
                 <executions>
@@ -260,7 +263,12 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>${surefire-plugin.version}</version>
+                        <version>${maven-failsafe-plugin.version}</version>
+                        <configuration>
+                            <includes>
+                                <include>**/*IT*</include>
+                            </includes>
+                        </configuration>
                         <executions>
                             <execution>
                                 <goals>

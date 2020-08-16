@@ -2,7 +2,10 @@ package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.service.ReviewService;
 import com.targa.labs.quarkushop.web.dto.ReviewDto;
+import io.quarkus.security.Authenticated;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -17,9 +20,9 @@ import java.util.List;
 /**
  * @author Nebrass Lamouchi
  */
-
 @Path("/reviews")
 @Produces(MediaType.APPLICATION_JSON)
+@Tag(name = "review", description = "All the review methods")
 public class ReviewResource {
 
     @Inject
@@ -37,6 +40,7 @@ public class ReviewResource {
         return this.reviewService.findById(id);
     }
 
+    @Authenticated
     @POST
     @Path("/product/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -44,6 +48,7 @@ public class ReviewResource {
         return this.reviewService.create(reviewDto, id);
     }
 
+    @RolesAllowed("admin")
     @DELETE
     @Path("/{id}")
     public void delete(@PathParam("id") Long id) {

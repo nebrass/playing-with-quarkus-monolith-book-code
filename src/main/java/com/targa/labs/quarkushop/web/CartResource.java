@@ -2,6 +2,8 @@ package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.service.CartService;
 import com.targa.labs.quarkushop.web.dto.CartDto;
+import io.quarkus.security.Authenticated;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
@@ -16,9 +18,10 @@ import java.util.List;
 /**
  * @author Nebrass Lamouchi
  */
-
+@Authenticated
 @Path("/carts")
 @Produces(MediaType.APPLICATION_JSON)
+@Tag(name = "cart", description = "All the cart methods")
 public class CartResource {
 
     @Inject

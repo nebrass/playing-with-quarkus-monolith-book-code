@@ -2,7 +2,10 @@ package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.service.PaymentService;
 import com.targa.labs.quarkushop.web.dto.PaymentDto;
+import io.quarkus.security.Authenticated;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -18,13 +21,16 @@ import java.util.List;
  * @author Nebrass Lamouchi
  */
 
+@Authenticated
 @Path("/payments")
 @Produces(MediaType.APPLICATION_JSON)
+@Tag(name = "payment", description = "All the payment methods")
 public class PaymentResource {
 
     @Inject
     PaymentService paymentService;
 
+    @RolesAllowed("admin")
     @GET
     public List<PaymentDto> findAll() {
         return this.paymentService.findAll();
@@ -42,6 +48,7 @@ public class PaymentResource {
         return this.paymentService.create(orderItemDto);
     }
 
+    @RolesAllowed("admin")
     @DELETE
     @Path("/{id}")
     public void delete(@PathParam("id") Long id) {

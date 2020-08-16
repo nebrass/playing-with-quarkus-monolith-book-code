@@ -2,6 +2,8 @@ package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.service.OrderItemService;
 import com.targa.labs.quarkushop.web.dto.OrderItemDto;
+import io.quarkus.security.Authenticated;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -18,8 +20,10 @@ import java.util.List;
  * @author Nebrass Lamouchi
  */
 
+@Authenticated
 @Path("/order-items")
 @Produces(MediaType.APPLICATION_JSON)
+@Tag(name = "order-item", description = "All the order-item methods")
 public class OrderItemResource {
 
     @Inject

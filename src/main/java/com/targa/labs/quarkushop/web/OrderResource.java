@@ -2,7 +2,10 @@ package com.targa.labs.quarkushop.web;
 
 import com.targa.labs.quarkushop.service.OrderService;
 import com.targa.labs.quarkushop.web.dto.OrderDto;
+import io.quarkus.security.Authenticated;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -18,13 +21,16 @@ import java.util.List;
  * @author Nebrass Lamouchi
  */
 
+@Authenticated
 @Path("/orders")
 @Produces(MediaType.APPLICATION_JSON)
+@Tag(name = "order", description = "All the order methods")
 public class OrderResource {
 
     @Inject
     OrderService orderService;
 
+    @RolesAllowed("admin")
     @GET
     public List<OrderDto> findAll() {
         return this.orderService.findAll();
