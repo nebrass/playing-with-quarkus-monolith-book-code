@@ -1,6 +1,7 @@
-package com.targa.labs.quarkushop.security;
+package com.targa.labs.quarkushop.web;
 
 
+import com.targa.labs.quarkushop.security.TokenService;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
