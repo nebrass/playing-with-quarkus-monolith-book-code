@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.security.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.metrics.MetricUnits;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Provider;
@@ -25,6 +28,8 @@ public class TokenService {
     @ConfigProperty(name = "keycloak.credentials.client-id", defaultValue = "undefined")
     Provider<String> clientIdProvider;
 
+    @Counted(name = "accessTokensRequestsCounter", description = "How many access_tokens have been requested.")
+    @Timed(name = "getAccessTokenRequestsTimer", description = "A measure of how long it takes to get an access_token.", unit = MetricUnits.MILLISECONDS)
     public String getAccessToken(String userName, String password) throws IOException, InterruptedException {
         return getAccessToken(jwtIssuerUrlProvider.get(), userName, password, clientIdProvider.get(), null);
     }

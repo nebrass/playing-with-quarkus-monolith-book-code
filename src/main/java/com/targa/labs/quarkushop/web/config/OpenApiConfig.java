@@ -25,9 +25,7 @@ import javax.ws.rs.core.Application;
                 contact = @Contact(name = "Nebrass Lamouchi", email = "lnibrass@gmail.com", url = "https://blog.nebrass.fr"),
                 version = "1.0.0-SNAPSHOT"
         ),
-        security = {
-                @SecurityRequirement(name = "JWT")
-        }
+        security = @SecurityRequirement(name = "JWT")
 )
 public class OpenApiConfig extends Application {
 }
