@@ -1,5 +1,6 @@
 package com.targa.labs.quarkushop.health;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -15,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+@Slf4j
 @Liveness
 @ApplicationScoped
 public class KeycloakConnectionHealthCheck implements HealthCheck {
@@ -54,9 +56,9 @@ public class KeycloakConnectionHealthCheck implements HealthCheck {
         try {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("IOException", e);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("InterruptedException", e);
             Thread.currentThread().interrupt();
         }
 

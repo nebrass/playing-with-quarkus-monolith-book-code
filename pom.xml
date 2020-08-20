@@ -170,6 +170,7 @@
                         <exclude>**/*IT*</exclude>
                         <exclude>**/web/*</exclude>
                         <exclude>**/security/*</exclude>
+                        <exclude>**/health/*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
