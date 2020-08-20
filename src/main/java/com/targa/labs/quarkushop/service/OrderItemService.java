@@ -20,8 +20,10 @@ public class OrderItemService {
 
     @Inject
     OrderItemRepository orderItemRepository;
+
     @Inject
     OrderRepository orderRepository;
+
     @Inject
     ProductRepository productRepository;
 
@@ -58,9 +60,7 @@ public class OrderItemService {
                         order
                 ));
 
-        order.setPrice(
-                order.getPrice().add(orderItem.getProduct().getPrice())
-        );
+        order.setPrice(order.getPrice().add(orderItem.getProduct().getPrice()));
 
         this.orderRepository.save(order);
 
