@@ -18,14 +18,14 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <quarkus-plugin.version>1.7.1.Final</quarkus-plugin.version>
+        <quarkus-plugin.version>1.8.2.Final</quarkus-plugin.version>
         <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-        <quarkus.platform.version>1.7.1.Final</quarkus.platform.version>
+        <quarkus.platform.version>1.8.2.Final</quarkus.platform.version>
         <testcontainers.version>1.14.3</testcontainers.version>
         <lombok.version>1.18.12</lombok.version>
 
-        <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
         <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
@@ -43,6 +43,7 @@
         <sonar.coverage.jacoco.xmlReportPaths>target/jacoco/test/jacoco.xml,target/jacoco/integrationTest/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -136,6 +137,21 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-metrics</artifactId>
+        </dependency>
+
+        <!-- Kubernetes -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-kubernetes</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-container-image-jib</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-kubernetes-config</artifactId>
         </dependency>
     </dependencies>
 
