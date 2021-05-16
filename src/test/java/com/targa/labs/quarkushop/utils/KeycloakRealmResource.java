@@ -50,8 +50,8 @@ public class KeycloakRealmResource implements QuarkusTestResourceLifecycleManage
                     "mysecret"
             );
 
-            config.put("quatkus-admin-access-token", adminAccessToken);
-            config.put("quatkus-test-access-token", testAccessToken);
+            config.put("quarkus-admin-access-token", adminAccessToken);
+            config.put("quarkus-test-access-token", testAccessToken);
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

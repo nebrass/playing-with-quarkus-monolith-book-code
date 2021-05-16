@@ -30,8 +30,8 @@ class ReviewResourceTest {
 
     @BeforeAll
     static void init() {
-        ADMIN_BEARER_TOKEN = System.getProperty("quatkus-admin-access-token");
-        USER_BEARER_TOKEN = System.getProperty("quatkus-test-access-token");
+        ADMIN_BEARER_TOKEN = System.getProperty("quarkus-admin-access-token");
+        USER_BEARER_TOKEN = System.getProperty("quarkus-test-access-token");
     }
 
     @Test

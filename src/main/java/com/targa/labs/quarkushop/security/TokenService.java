@@ -1,14 +1,15 @@
 package com.targa.labs.quarkushop.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tags;
 import io.quarkus.security.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.metrics.MetricUnits;
-import org.eclipse.microprofile.metrics.annotation.Counted;
-import org.eclipse.microprofile.metrics.annotation.Timed;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.net.URI;
@@ -22,16 +23,42 @@ import static java.net.http.HttpRequest.BodyPublishers;
 @RequestScoped
 public class TokenService {
 
+    private static final String TOKENS_REQUESTS_TIMER = "tokensRequestsTimer";
+    private static final String TOKENS_REQUESTS_COUNTER = "tokensRequestsCounter";
+
+    @Inject
+    MeterRegistry registry;
+
     @ConfigProperty(name = "mp.jwt.verify.issuer", defaultValue = "undefined")
     Provider<String> jwtIssuerUrlProvider;
 
     @ConfigProperty(name = "keycloak.credentials.client-id", defaultValue = "undefined")
     Provider<String> clientIdProvider;
 
-    @Counted(name = "accessTokensRequestsCounter", description = "How many access_tokens have been requested.")
-    @Timed(name = "getAccessTokenRequestsTimer", description = "A measure of how long it takes to get an access_token.", unit = MetricUnits.MILLISECONDS)
-    public String getAccessToken(String userName, String password) throws IOException, InterruptedException {
-        return getAccessToken(jwtIssuerUrlProvider.get(), userName, password, clientIdProvider.get(), null);
+    @PostConstruct
+    public void init() {
+        // How many access_tokens have been requested
+        registry.counter(TOKENS_REQUESTS_COUNTER, Tags.empty());
+        // A measure of how long it takes to get an access_token
+        registry.timer(TOKENS_REQUESTS_TIMER, Tags.empty());
+    }
+
+    public String getAccessToken(String userName, String password) {
+
+        var timer = registry.timer(TOKENS_REQUESTS_TIMER);
+        return timer.record(() -> {
+            var accessToken = "";
+            try {
+                accessToken = getAccessToken(jwtIssuerUrlProvider.get(), userName, password, clientIdProvider.get(), null);
+                registry.counter(TOKENS_REQUESTS_COUNTER).increment();
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("Cannot get the access_token");
+            }
+            return accessToken;
+        });
     }
 
     public String getAccessToken(String jwtIssuerUrl, String userName, String password, String clientId, String clientSecret) throws IOException, InterruptedException {
@@ -52,10 +79,10 @@ public class TokenService {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        String accessToken = "";
+        var accessToken = "";
 
         if (response.statusCode() == 200) {
-            ObjectMapper mapper = new ObjectMapper();
+            var mapper = new ObjectMapper();
             try {
                 accessToken = mapper.readTree(response.body()).get("access_token").textValue();
             } catch (IOException e) {
