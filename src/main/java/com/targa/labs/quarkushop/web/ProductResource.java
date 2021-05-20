@@ -21,7 +21,6 @@ import java.util.List;
  */
 
 @Path("/products")
-@Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "product", description = "All the product methods")
 public class ProductResource {
 

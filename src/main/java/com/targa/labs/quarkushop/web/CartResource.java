@@ -20,7 +20,6 @@ import java.util.List;
  */
 @Authenticated
 @Path("/carts")
-@Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "cart", description = "All the cart methods")
 public class CartResource {
 

@@ -23,7 +23,6 @@ import java.util.List;
 
 @Authenticated
 @Path("/payments")
-@Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "payment", description = "All the payment methods")
 public class PaymentResource {
 

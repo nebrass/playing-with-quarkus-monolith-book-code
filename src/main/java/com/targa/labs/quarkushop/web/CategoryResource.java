@@ -22,7 +22,6 @@ import java.util.List;
  */
 
 @Path("/categories")
-@Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "category", description = "All the category methods")
 public class CategoryResource {
 

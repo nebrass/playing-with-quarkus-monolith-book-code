@@ -22,7 +22,6 @@ import java.util.List;
 
 @Authenticated
 @Path("/order-items")
-@Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "order-item", description = "All the order-item methods")
 public class OrderItemResource {
 

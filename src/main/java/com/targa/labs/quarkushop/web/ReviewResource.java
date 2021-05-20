@@ -21,7 +21,6 @@ import java.util.List;
  * @author Nebrass Lamouchi
  */
 @Path("/reviews")
-@Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "review", description = "All the review methods")
 public class ReviewResource {
 

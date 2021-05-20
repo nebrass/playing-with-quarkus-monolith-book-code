@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Path("/user")
-@Produces(MediaType.APPLICATION_JSON)
 @Tag(name = " user", description = "All the user methods")
 public class UserResource {
 
