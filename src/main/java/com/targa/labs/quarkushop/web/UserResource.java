@@ -2,6 +2,8 @@ package com.targa.labs.quarkushop.web;
 
 
 import com.targa.labs.quarkushop.security.TokenService;
+import com.targa.labs.quarkushop.web.dto.AccessTokenDto;
+import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
@@ -32,9 +34,17 @@ public class UserResource {
 
     @POST
     @Path("/access-token")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getAccessToken(@QueryParam("username") String username, @QueryParam("password") String password) throws IOException, InterruptedException {
+    @Produces(MediaType.APPLICATION_JSON)
+    public AccessTokenDto getAccessToken(@QueryParam("username") String username, @QueryParam("password") String password) throws IOException, InterruptedException {
         return tokenService.getAccessToken(username, password);
+    }
+
+    @POST
+    @Authenticated
+    @Path("/refresh-token")
+    @Produces(MediaType.APPLICATION_JSON)
+    public AccessTokenDto getRefreshToken(AccessTokenDto accessTokenDto) {
+        return tokenService.getRefreshToken(accessTokenDto);
     }
 
     @GET

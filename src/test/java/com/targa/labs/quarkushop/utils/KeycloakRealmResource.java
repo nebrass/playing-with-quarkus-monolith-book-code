@@ -41,14 +41,14 @@ public class KeycloakRealmResource implements QuarkusTestResourceLifecycleManage
                     "test",
                     "quarkus-client",
                     "mysecret"
-            );
+            ).getAccessToken();
 
             String testAccessToken = tokenService.getAccessToken(jwtIssuerUrl,
                     "test",
                     "test",
                     "quarkus-client",
                     "mysecret"
-            );
+            ).getAccessToken();
 
             config.put("quarkus-admin-access-token", adminAccessToken);
             config.put("quarkus-test-access-token", testAccessToken);
