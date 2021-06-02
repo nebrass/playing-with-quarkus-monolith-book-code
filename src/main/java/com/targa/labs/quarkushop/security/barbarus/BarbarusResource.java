@@ -51,7 +51,7 @@ public class BarbarusResource {
     @Path("/logout")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response logout(@Valid AccessTokenDto accessTokenDto) {
-        Boolean result = this.tokenService.invalidateToken(accessTokenDto);
+        boolean result = this.tokenService.invalidateToken(accessTokenDto);
 
         if (result) {
             return Response.ok().build();
@@ -60,4 +60,3 @@ public class BarbarusResource {
         }
     }
 }
-
